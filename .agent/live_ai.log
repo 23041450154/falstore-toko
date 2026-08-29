@@ -1,0 +1,623 @@
+[2026-08-29T17:17:05.105Z] [SYSTEM] AI Terminal Stream initialized on VPS UpCloud.
+[5:17:09 PM] [USER_DISPATCH] > "Echo status check and check ecommerce files" (Target: Codex)
+[5:17:09 PM] [CODEX_ERR] Reading additional input from stdin...
+[5:19:06 PM] [USER_DISPATCH] > "Tuliskan status proyek saat ini dalam 1 baris ringkas" (Agent: Codex)
+[5:19:06 PM] [CODEX_STREAM] OpenAI Codex v0.151.0
+[5:19:06 PM] [CODEX_STREAM] --------
+[5:19:06 PM] [CODEX_STREAM] workdir: /var/www/ecommerce
+[5:19:06 PM] [CODEX_STREAM] model: gpt-5.6-sol
+[5:19:06 PM] [CODEX_STREAM] provider: openai
+[5:19:06 PM] [CODEX_STREAM] approval: never
+[5:19:06 PM] [CODEX_STREAM] sandbox: read-only
+[5:19:06 PM] [CODEX_STREAM] reasoning effort: xhigh
+[5:19:06 PM] [CODEX_STREAM] reasoning summaries: none
+[5:19:06 PM] [CODEX_STREAM] session id: 01a04e88-3ddc-78e0-944b-3b45c5f3db06
+[5:19:06 PM] [CODEX_STREAM] --------
+[5:19:06 PM] [CODEX_STREAM] user
+[5:19:06 PM] [CODEX_STREAM] Tuliskan status proyek saat ini dalam 1 baris ringkas
+[5:19:14 PM] [CODEX_STREAM] codex
+[5:19:14 PM] [CODEX_STREAM] Saya cek kondisi repositori dan perubahan kerja terkini, lalu saya rangkum dalam satu baris.
+[5:19:15 PM] [CODEX_STREAM] exec
+[5:19:15 PM] [CODEX_STREAM] /bin/bash -lc "git status --short --branch && git log -1 --pretty=format:'%h %s (%cr)'" in /var/www/ecommerce
+[5:19:15 PM] [CODEX_STREAM] exited 128 in 0ms:
+[5:19:15 PM] [CODEX_STREAM] fatal: not a git repository (or any of the parent directories): .git
+[5:19:19 PM] [CODEX_STREAM] exec
+[5:19:19 PM] [CODEX_STREAM] /bin/bash -lc "pwd && rg --files -g '"'!*node_modules*'"' -g '"'!*.lock'"' | sed -n '1,120p'" in /var/www/ecommerce
+[5:19:19 PM] [CODEX_STREAM] succeeded in 0ms:
+[5:19:19 PM] [CODEX_STREAM] /var/www/ecommerce
+[5:19:19 PM] [CODEX_STREAM] package-lock.json
+[5:19:19 PM] [CODEX_STREAM] package.json
+[5:19:19 PM] [CODEX_STREAM] public/index.html
+[5:19:19 PM] [CODEX_STREAM] server.js
+[5:19:23 PM] [CODEX_STREAM] exec
+[5:19:23 PM] [CODEX_STREAM] /bin/bash -lc "sed -n '1,240p' package.json && sed -n '1,300p' server.js && sed -n '1,260p' public/index.html" in /var/www/ecommerce
+[5:19:23 PM] [CODEX_STREAM] succeeded in 0ms:
+[5:19:23 PM] [CODEX_STREAM] {
+[5:19:23 PM] [CODEX_STREAM]   "name": "ecommerce",
+[5:19:23 PM] [CODEX_STREAM]   "version": "1.0.0",
+[5:19:23 PM] [CODEX_STREAM]   "description": "",
+[5:19:23 PM] [CODEX_STREAM]   "main": "server.js",
+[5:19:23 PM] [CODEX_STREAM]   "scripts": {
+[5:19:23 PM] [CODEX_STREAM]     "test": "echo \"Error: no test specified\" && exit 1",
+[5:19:23 PM] [CODEX_STREAM]     "start": "node server.js"
+[5:19:23 PM] [CODEX_STREAM]   },
+[5:19:23 PM] [CODEX_STREAM]   "keywords": [],
+[5:19:23 PM] [CODEX_STREAM]   "author": "",
+[5:19:23 PM] [CODEX_STREAM]   "license": "ISC",
+[5:19:23 PM] [CODEX_STREAM]   "dependencies": {
+[5:19:23 PM] [CODEX_STREAM]     "cors": "^2.8.6",
+[5:19:23 PM] [CODEX_STREAM]     "express": "^5.2.1",
+[5:19:23 PM] [CODEX_STREAM]     "pg": "^8.23.0"
+[5:19:23 PM] [CODEX_STREAM]   }
+[5:19:23 PM] [CODEX_STREAM] }
+[5:19:23 PM] [CODEX_STREAM] const express = require('express');
+[5:19:23 PM] [CODEX_STREAM] const cors = require('cors');
+[5:19:23 PM] [CODEX_STREAM] const path = require('path');
+[5:19:23 PM] [CODEX_STREAM] const fs = require('fs');
+[5:19:23 PM] [CODEX_STREAM] const { Pool } = require('pg');
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM] const app = express();
+[5:19:23 PM] [CODEX_STREAM] const PORT = 3000;
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM] app.use(cors());
+[5:19:23 PM] [CODEX_STREAM] app.use(express.json());
+[5:19:23 PM] [CODEX_STREAM] app.use(express.static(path.join(__dirname, 'public')));
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM] // PostgreSQL Pool
+[5:19:23 PM] [CODEX_STREAM] const pool = new Pool({
+[5:19:23 PM] [CODEX_STREAM]   user: 'postgres',
+[5:19:23 PM] [CODEX_STREAM]   host: '127.0.0.1',
+[5:19:23 PM] [CODEX_STREAM]   database: 'falstore_db',
+[5:19:23 PM] [CODEX_STREAM]   password: 'naufal_secure_db_pass_2026',
+[5:19:23 PM] [CODEX_STREAM]   port: 5432,
+[5:19:23 PM] [CODEX_STREAM] });
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM] // JSON fallback file in case DB is initializing
+[5:19:23 PM] [CODEX_STREAM] const DB_FILE = path.join(__dirname, '.agent', 'ecommerce_data.json');
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM] const INITIAL_PRODUCTS = [
+[5:19:23 PM] [CODEX_STREAM]   {
+[5:19:23 PM] [CODEX_STREAM]     id: 'PRD-1',
+[5:19:23 PM] [CODEX_STREAM]     name: 'Oversized Cotton Tee Essential',
+[5:19:23 PM] [CODEX_STREAM]     category: 'fashion',
+[5:19:23 PM] [CODEX_STREAM]     price: 149000,
+[5:19:23 PM] [CODEX_STREAM]     original_price: 199000,
+[5:19:23 PM] [CODEX_STREAM]     rating: 4.9,
+[5:19:23 PM] [CODEX_STREAM]     sold: 234,
+[5:19:23 PM] [CODEX_STREAM]     stock: 45,
+[5:19:23 PM] [CODEX_STREAM]     badge: 'Best Seller',
+[5:19:23 PM] [CODEX_STREAM]     image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80',
+[5:19:23 PM] [CODEX_STREAM]     desc: 'Bahan combed 24s premium, adem dan menyerap keringat, potongan rileks modern.'
+[5:19:23 PM] [CODEX_STREAM]   },
+[5:19:23 PM] [CODEX_STREAM]   {
+[5:19:23 PM] [CODEX_STREAM]     id: 'PRD-2',
+[5:19:23 PM] [CODEX_STREAM]     name: 'Urban Tech Cargo Pants Waterproof',
+[5:19:23 PM] [CODEX_STREAM]     category: 'fashion',
+[5:19:23 PM] [CODEX_STREAM]     price: 289000,
+[5:19:23 PM] [CODEX_STREAM]     original_price: 389000,
+[5:19:23 PM] [CODEX_STREAM]     rating: 4.8,
+[5:19:23 PM] [CODEX_STREAM]     sold: 142,
+[5:19:23 PM] [CODEX_STREAM]     stock: 28,
+[5:19:23 PM] [CODEX_STREAM]     badge: 'Diskon 25%',
+[5:19:23 PM] [CODEX_STREAM]     image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&auto=format&fit=crop&q=80',
+[5:19:23 PM] [CODEX_STREAM]     desc: 'Bahan despo stretch tahan percikan air, 6 saku fungsional dengan resleting YKK.'
+[5:19:23 PM] [CODEX_STREAM]   },
+[5:19:23 PM] [CODEX_STREAM]   {
+[5:19:23 PM] [CODEX_STREAM]     id: 'PRD-3',
+[5:19:23 PM] [CODEX_STREAM]     name: 'Wireless ANC Earbuds Pro Max',
+[5:19:23 PM] [CODEX_STREAM]     category: 'gadget',
+[5:19:23 PM] [CODEX_STREAM]     price: 499000,
+[5:19:23 PM] [CODEX_STREAM]     original_price: 799000,
+[5:19:23 PM] [CODEX_STREAM]     rating: 5.0,
+[5:19:23 PM] [CODEX_STREAM]     sold: 412,
+[5:19:23 PM] [CODEX_STREAM]     stock: 60,
+[5:19:23 PM] [CODEX_STREAM]     badge: 'Hot Item',
+[5:19:23 PM] [CODEX_STREAM]     image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&auto=format&fit=crop&q=80',
+[5:19:23 PM] [CODEX_STREAM]     desc: 'Active Noise Cancellation 35dB, Bluetooth 5.3 low latency, baterai tahan 30 jam.'
+[5:19:23 PM] [CODEX_STREAM]   },
+[5:19:23 PM] [CODEX_STREAM]   {
+[5:19:23 PM] [CODEX_STREAM]     id: 'PRD-4',
+[5:19:23 PM] [CODEX_STREAM]     name: 'Smartwatch AMOLED Health Tracker',
+[5:19:23 PM] [CODEX_STREAM]     category: 'gadget',
+[5:19:23 PM] [CODEX_STREAM]     price: 649000,
+[5:19:23 PM] [CODEX_STREAM]     original_price: 899000,
+[5:19:23 PM] [CODEX_STREAM]     rating: 4.9,
+[5:19:23 PM] [CODEX_STREAM]     sold: 98,
+[5:19:23 PM] [CODEX_STREAM]     stock: 19,
+[5:19:23 PM] [CODEX_STREAM]     badge: 'New Arrival',
+[5:19:23 PM] [CODEX_STREAM]     image: 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=600&auto=format&fit=crop&q=80',
+[5:19:23 PM] [CODEX_STREAM]     desc: 'Layar Always-On Display AMOLED 1.43 inch, sensor SpO2, detak jantung, IP68 tahan air.'
+[5:19:23 PM] [CODEX_STREAM]   },
+[5:19:23 PM] [CODEX_STREAM]   {
+[5:19:23 PM] [CODEX_STREAM]     id: 'PRD-5',
+[5:19:23 PM] [CODEX_STREAM]     name: 'Retro Running Sneakers Chunky',
+[5:19:23 PM] [CODEX_STREAM]     category: 'sepatu',
+[5:19:23 PM] [CODEX_STREAM]     price: 379000,
+[5:19:23 PM] [CODEX_STREAM]     original_price: 499000,
+[5:19:23 PM] [CODEX_STREAM]     rating: 4.8,
+[5:19:23 PM] [CODEX_STREAM]     sold: 189,
+[5:19:23 PM] [CODEX_STREAM]     stock: 32,
+[5:19:23 PM] [CODEX_STREAM]     badge: 'Trending',
+[5:19:23 PM] [CODEX_STREAM]     image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80',
+[5:19:23 PM] [CODEX_STREAM]     desc: 'Sol phylon super empuk, upper breathable mesh, grip karet anti slip.'
+[5:19:23 PM] [CODEX_STREAM]   },
+[5:19:23 PM] [CODEX_STREAM]   {
+[5:19:23 PM] [CODEX_STREAM]     id: 'PRD-6',
+[5:19:23 PM] [CODEX_STREAM]     name: 'Minimalist Leather Bi-Fold Wallet',
+[5:19:23 PM] [CODEX_STREAM]     category: 'aksesoris',
+[5:19:23 PM] [CODEX_STREAM]     price: 189000,
+[5:19:23 PM] [CODEX_STREAM]     original_price: 249000,
+[5:19:23 PM] [CODEX_STREAM]     rating: 4.9,
+[5:19:23 PM] [CODEX_STREAM]     sold: 310,
+[5:19:23 PM] [CODEX_STREAM]     stock: 50,
+[5:19:23 PM] [CODEX_STREAM]     badge: 'Premium Leather',
+[5:19:23 PM] [CODEX_STREAM]     image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=600&auto=format&fit=crop&q=80',
+[5:19:23 PM] [CODEX_STREAM]     desc: 'Kulit sapi asli pull-up, proteksi RFID blocking, muat 8 kartu + slot uang kertas.'
+[5:19:23 PM] [CODEX_STREAM]   },
+[5:19:23 PM] [CODEX_STREAM]   {
+[5:19:23 PM] [CODEX_STREAM]     id: 'PRD-7',
+[5:19:23 PM] [CODEX_STREAM]     name: 'Aviator Polarized Sunglasses UV400',
+[5:19:23 PM] [CODEX_STREAM]     category: 'aksesoris',
+[5:19:23 PM] [CODEX_STREAM]     price: 139000,
+[5:19:23 PM] [CODEX_STREAM]     original_price: 199000,
+[5:19:23 PM] [CODEX_STREAM]     rating: 4.7,
+[5:19:23 PM] [CODEX_STREAM]     sold: 215,
+[5:19:23 PM] [CODEX_STREAM]     stock: 40,
+[5:19:23 PM] [CODEX_STREAM]     badge: 'Summer Sale',
+[5:19:23 PM] [CODEX_STREAM]     image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&auto=format&fit=crop&q=80',
+[5:19:23 PM] [CODEX_STREAM]     desc: 'Lensa polarized TAC anti silau 100% proteksi UV400, frame stainless ringan.'
+[5:19:23 PM] [CODEX_STREAM]   },
+[5:19:23 PM] [CODEX_STREAM]   {
+[5:19:23 PM] [CODEX_STREAM]     id: 'PRD-8',
+[5:19:23 PM] [CODEX_STREAM]     name: 'Canvas Casual High-Top Shoes',
+[5:19:23 PM] [CODEX_STREAM]     category: 'sepatu',
+[5:19:23 PM] [CODEX_STREAM]     price: 299000,
+[5:19:23 PM] [CODEX_STREAM]     original_price: 399000,
+[5:19:23 PM] [CODEX_STREAM]     rating: 4.8,
+[5:19:23 PM] [CODEX_STREAM]     sold: 174,
+[5:19:23 PM] [CODEX_STREAM]     stock: 25,
+[5:19:23 PM] [CODEX_STREAM]     badge: 'Classic',
+[5:19:23 PM] [CODEX_STREAM]     image: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&auto=format&fit=crop&q=80',
+[5:19:23 PM] [CODEX_STREAM]     desc: 'Kanvas 12oz tebal tidak kaku, insole memory foam nyaman dipakai seharian.'
+[5:19:23 PM] [CODEX_STREAM]   }
+[5:19:23 PM] [CODEX_STREAM] ];
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM] // Initialize Database Tables
+[5:19:23 PM] [CODEX_STREAM] async function initDB() {
+[5:19:23 PM] [CODEX_STREAM]   try {
+[5:19:23 PM] [CODEX_STREAM]     await pool.query(`
+[5:19:23 PM] [CODEX_STREAM]       CREATE TABLE IF NOT EXISTS products (
+[5:19:23 PM] [CODEX_STREAM]         id VARCHAR(50) PRIMARY KEY,
+[5:19:23 PM] [CODEX_STREAM]         name VARCHAR(255) NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         category VARCHAR(100) NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         price NUMERIC NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         original_price NUMERIC NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         rating NUMERIC DEFAULT 5.0,
+[5:19:23 PM] [CODEX_STREAM]         sold INT DEFAULT 0,
+[5:19:23 PM] [CODEX_STREAM]         stock INT DEFAULT 50,
+[5:19:23 PM] [CODEX_STREAM]         badge VARCHAR(100),
+[5:19:23 PM] [CODEX_STREAM]         image TEXT NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         description TEXT,
+[5:19:23 PM] [CODEX_STREAM]         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+[5:19:23 PM] [CODEX_STREAM]       );
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]       CREATE TABLE IF NOT EXISTS orders (
+[5:19:23 PM] [CODEX_STREAM]         id VARCHAR(50) PRIMARY KEY,
+[5:19:23 PM] [CODEX_STREAM]         customer_name VARCHAR(255) NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         customer_phone VARCHAR(50) NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         customer_address TEXT NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         courier VARCHAR(50) NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         payment_method VARCHAR(50) NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         subtotal NUMERIC NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         discount NUMERIC DEFAULT 0,
+[5:19:23 PM] [CODEX_STREAM]         shipping_fee NUMERIC NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         total_amount NUMERIC NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         status VARCHAR(50) DEFAULT 'Menunggu Pembayaran',
+[5:19:23 PM] [CODEX_STREAM]         items JSONB NOT NULL,
+[5:19:23 PM] [CODEX_STREAM]         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+[5:19:23 PM] [CODEX_STREAM]       );
+[5:19:23 PM] [CODEX_STREAM]     `);
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]     // Seed products if empty
+[5:19:23 PM] [CODEX_STREAM]     const countRes = await pool.query('SELECT count(*) FROM products');
+[5:19:23 PM] [CODEX_STREAM]     if (parseInt(countRes.rows[0].count) === 0) {
+[5:19:23 PM] [CODEX_STREAM]       for (const p of INITIAL_PRODUCTS) {
+[5:19:23 PM] [CODEX_STREAM]         await pool.query(`
+[5:19:23 PM] [CODEX_STREAM]           INSERT INTO products (id, name, category, price, original_price, rating, sold, stock, badge, image, description)
+[5:19:23 PM] [CODEX_STREAM]           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+[5:19:23 PM] [CODEX_STREAM]           ON CONFLICT (id) DO NOTHING;
+[5:19:23 PM] [CODEX_STREAM]         `, [p.id, p.name, p.category, p.price, p.original_price, p.rating, p.sold, p.stock, p.badge, p.image, p.desc]);
+[5:19:23 PM] [CODEX_STREAM]       }
+[5:19:23 PM] [CODEX_STREAM]       console.log('PostgreSQL database seeded with initial products.');
+[5:19:23 PM] [CODEX_STREAM]     }
+[5:19:23 PM] [CODEX_STREAM]     console.log('PostgreSQL connected and tables verified.');
+[5:19:23 PM] [CODEX_STREAM]   } catch (err) {
+[5:19:23 PM] [CODEX_STREAM]     console.error('PostgreSQL connection error, using JSON file fallback:', err.message);
+[5:19:23 PM] [CODEX_STREAM]     if (!fs.existsSync(DB_FILE)) {
+[5:19:23 PM] [CODEX_STREAM]       fs.writeFileSync(DB_FILE, JSON.stringify({ products: INITIAL_PRODUCTS, orders: [] }, null, 2));
+[5:19:23 PM] [CODEX_STREAM]     }
+[5:19:23 PM] [CODEX_STREAM]   }
+[5:19:23 PM] [CODEX_STREAM] }
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM] initDB();
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM] // Helper to broadcast event to AI Orchestrator
+[5:19:23 PM] [CODEX_STREAM] function logToAgent(role, message) {
+[5:19:23 PM] [CODEX_STREAM]   const logPath = path.join(__dirname, '.agent', 'agent_activity.jsonl');
+[5:19:23 PM] [CODEX_STREAM]   const entry = JSON.stringify({
+[5:19:23 PM] [CODEX_STREAM]     type: 'log',
+[5:19:23 PM] [CODEX_STREAM]     message: `[${role}] ${message}`,
+[5:19:23 PM] [CODEX_STREAM]     timestamp: new Date().toISOString()
+[5:19:23 PM] [CODEX_STREAM]   });
+[5:19:23 PM] [CODEX_STREAM]   try {
+[5:19:23 PM] [CODEX_STREAM]     fs.appendFileSync(logPath, entry + '\n');
+[5:19:23 PM] [CODEX_STREAM]   } catch(e) {}
+[5:19:23 PM] [CODEX_STREAM] }
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM] // REST APIs
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM] // 1. GET /api/products
+[5:19:23 PM] [CODEX_STREAM] app.get('/api/products', async (req, res) => {
+[5:19:23 PM] [CODEX_STREAM]   const { category, search } = req.query;
+[5:19:23 PM] [CODEX_STREAM]   try {
+[5:19:23 PM] [CODEX_STREAM]     let query = 'SELECT * FROM products ORDER BY created_at DESC';
+[5:19:23 PM] [CODEX_STREAM]     let params = [];
+[5:19:23 PM] [CODEX_STREAM]     const conditions = [];
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]     if (category && category !== 'all') {
+[5:19:23 PM] [CODEX_STREAM]       params.push(category);
+[5:19:23 PM] [CODEX_STREAM]       conditions.push(`category = $${params.length}`);
+[5:19:23 PM] [CODEX_STREAM]     }
+[5:19:23 PM] [CODEX_STREAM]     if (search) {
+[5:19:23 PM] [CODEX_STREAM]       params.push(`%${search.toLowerCase()}%`);
+[5:19:23 PM] [CODEX_STREAM]       conditions.push(`(LOWER(name) LIKE $${params.length} OR LOWER(description) LIKE $${params.length})`);
+[5:19:23 PM] [CODEX_STREAM]     }
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]     if (conditions.length > 0) {
+[5:19:23 PM] [CODEX_STREAM]       query = `SELECT * FROM products WHERE ${conditions.join(' AND ')} ORDER BY created_at DESC`;
+[5:19:23 PM] [CODEX_STREAM]     }
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]     const result = await pool.query(query, params);
+[5:19:23 PM] [CODEX_STREAM]     res.json({ success: true, products: result.rows });
+[5:19:23 PM] [CODEX_STREAM]   } catch (err) {
+[5:19:23 PM] [CODEX_STREAM]     // Fallback JSON
+[5:19:23 PM] [CODEX_STREAM]     let data = INITIAL_PRODUCTS;
+[5:19:23 PM] [CODEX_STREAM]     if (fs.existsSync(DB_FILE)) {
+[5:19:23 PM] [CODEX_STREAM]       data = JSON.parse(fs.readFileSync(DB_FILE, 'utf-8')).products;
+[5:19:23 PM] [CODEX_STREAM]     }
+[5:19:23 PM] [CODEX_STREAM]     let filtered = data;
+[5:19:23 PM] [CODEX_STREAM]     if (category && category !== 'all') filtered = filtered.filter(p => p.category === category);
+[5:19:23 PM] [CODEX_STREAM]     if (search) filtered = filtered.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
+[5:19:23 PM] [CODEX_STREAM]     res.json({ success: true, products: filtered });
+[5:19:23 PM] [CODEX_STREAM]   }
+[5:19:23 PM] [CODEX_STREAM] });
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM] // 2. POST /api/products (Admin)
+[5:19:23 PM] [CODEX_STREAM] app.post('/api/products', async (req, res) => {
+[5:19:23 PM] [CODEX_STREAM]   const { name, category, price, original_price, stock, badge, image, desc } = req.body;
+[5:19:23 PM] [CODEX_STREAM]   if (!name || !price || !image) {
+[5:19:23 PM] [CODEX_STREAM]     return res.status(400).json({ error: 'Nama, harga, dan gambar produk wajib diisi!' });
+[5:19:23 PM] [CODEX_STREAM]   }
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]   const id = 'PRD-' + Math.floor(100 + Math.random() * 900);
+[5:19:23 PM] [CODEX_STREAM]   try {
+[5:19:23 PM] [CODEX_STREAM]     await pool.query(`
+[5:19:23 PM] [CODEX_STREAM]       INSERT INTO products (id, name, category, price, original_price, rating, sold, stock, badge, image, description)
+[5:19:23 PM] [CODEX_STREAM]       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+[5:19:23 PM] [CODEX_STREAM]     `, [id, name, category || 'fashion', price, original_price || price, 5.0, 0, stock || 50, badge || 'New', image, desc || '']);
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]     logToAgent('Backend Dev', `Produk baru ditambahkan ke katalog: "${name}" (${id})`);
+[5:19:23 PM] [CODEX_STREAM]     res.json({ success: true, product: { id, name, price } });
+[5:19:23 PM] [CODEX_STREAM]   } catch (err) {
+[5:19:23 PM] [CODEX_STREAM]     res.status(500).json({ error: err.message });
+[5:19:23 PM] [CODEX_STREAM]   }
+[5:19:23 PM] [CODEX_STREAM] });
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM] // 3. DELETE /api/products/:id (Admin)
+[5:19:23 PM] [CODEX_STREAM] app.delete('/api/products/:id', async (req, res) => {
+[5:19:23 PM] [CODEX_STREAM]   const { id } = req.params;
+[5:19:23 PM] [CODEX_STREAM]   try {
+[5:19:23 PM] [CODEX_STREAM]     await pool.query('DELETE FROM products WHERE id = $1', [id]);
+[5:19:23 PM] [CODEX_STREAM]     logToAgent('Backend Dev', `Produk ${id} dihapus dari katalog.`);
+[5:19:23 PM] [CODEX_STREAM]     res.json({ success: true, message: 'Produk berhasil dihapus.' });
+[5:19:23 PM] [CODEX_STREAM]   } catch (err) {
+[5:19:23 PM] [CODEX_STREAM]     res.status(500).json({ error: err.message });
+[5:19:23 PM] [CODEX_STREAM]   }
+[5:19:23 PM] [CODEX_STREAM] });
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM] // 4. POST /api/orders (Customer Checkout)
+[5:19:23 PM] [CODEX_STREAM] app.post('/api/orders', async (req, res) => {
+[5:19:23 PM] [CODEX_STREAM]   const { customer_name, customer_phone, customer_address, courier, payment_method, items, discount_code } = req.body;
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]   if (!customer_name || !customer_phone || !items || items.length === 0) {
+[5:19:23 PM] [CODEX_STREAM]     return res.status(400).json({ error: 'Data pesanan tidak lengkap.' });
+[5:19:23 PM] [CODEX_STREAM]   }
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]   const orderId = 'INV-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+[5:19:23 PM] [CODEX_STREAM]   
+[5:19:23 PM] [CODEX_STREAM]   const subtotal = items.reduce((acc, i) => acc + (Number(i.price) * Number(i.qty)), 0);
+[5:19:23 PM] [CODEX_STREAM]   let discount = 0;
+[5:19:23 PM] [CODEX_STREAM]   if (discount_code === 'FALSTORE50') {
+[5:19:23 PM] [CODEX_STREAM]     discount = subtotal * 0.5;
+[5:19:23 PM] [CODEX_STREAM]   }
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]   const shippingFees = { jne: 15000, sicepat: 16000, gosend: 25000 };
+[5:19:23 PM] [CODEX_STREAM]   const shipping_fee = shippingFees[courier] || 15000;
+[5:19:23 PM] [CODEX_STREAM]   const total_amount = subtotal - discount + shipping_fee;
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]   try {
+[5:19:23 PM] [CODEX_STREAM]     await pool.query(`
+[5:19:23 PM] [CODEX_STREAM]       INSERT INTO orders (id, customer_name, customer_phone, customer_address, courier, payment_method, subtotal, discount, shipping_fee, total_amount, items)
+[5:19:23 PM] [CODEX_STREAM]       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+[5:19:23 PM] [CODEX_STREAM]     `, [orderId, customer_name, customer_phone, customer_address || '', courier || 'jne', payment_method || 'qris', subtotal, discount, shipping_fee, total_amount, JSON.stringify(items)]);
+[5:19:23 PM] [CODEX_STREAM] <!DOCTYPE html>
+[5:19:23 PM] [CODEX_STREAM] <html lang="id" class="scroll-smooth">
+[5:19:23 PM] [CODEX_STREAM] <head>
+[5:19:23 PM] [CODEX_STREAM]   <meta charset="UTF-8">
+[5:19:23 PM] [CODEX_STREAM]   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+[5:19:23 PM] [CODEX_STREAM]   <title>FalStore | Toko Online Modern & Terpercaya</title>
+[5:19:23 PM] [CODEX_STREAM]   <script src="https://cdn.tailwindcss.com"></script>
+[5:19:23 PM] [CODEX_STREAM]   <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+[5:19:23 PM] [CODEX_STREAM]   <script>
+[5:19:23 PM] [CODEX_STREAM]     tailwind.config = {
+[5:19:23 PM] [CODEX_STREAM]       darkMode: 'class',
+[5:19:23 PM] [CODEX_STREAM]       theme: {
+[5:19:23 PM] [CODEX_STREAM]         extend: {
+[5:19:23 PM] [CODEX_STREAM]           colors: {
+[5:19:23 PM] [CODEX_STREAM]             brand: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0284c7', 600: '#0369a1', 700: '#075985', 900: '#0c4a6e' }
+[5:19:23 PM] [CODEX_STREAM]           }
+[5:19:23 PM] [CODEX_STREAM]         }
+[5:19:23 PM] [CODEX_STREAM]       }
+[5:19:23 PM] [CODEX_STREAM]     }
+[5:19:23 PM] [CODEX_STREAM]   </script>
+[5:19:23 PM] [CODEX_STREAM]   <link rel="preconnect" href="https://fonts.googleapis.com">
+[5:19:23 PM] [CODEX_STREAM]   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+[5:19:23 PM] [CODEX_STREAM]   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+[5:19:23 PM] [CODEX_STREAM]   <style>
+[5:19:23 PM] [CODEX_STREAM]     body { font-family: 'Plus Jakarta Sans', sans-serif; }
+[5:19:23 PM] [CODEX_STREAM]     .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+[5:19:23 PM] [CODEX_STREAM]     .gradient-glow { background: radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.35), transparent 70%); }
+[5:19:23 PM] [CODEX_STREAM]     .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+[5:19:23 PM] [CODEX_STREAM]     .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
+[5:19:23 PM] [CODEX_STREAM]     .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
+[5:19:23 PM] [CODEX_STREAM]   </style>
+[5:19:23 PM] [CODEX_STREAM] </head>
+[5:19:23 PM] [CODEX_STREAM] <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-blue-600 selection:text-white antialiased">
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]   <!-- Promo Top Bar -->
+[5:19:23 PM] [CODEX_STREAM]   <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white text-xs py-2 px-4 text-center font-medium flex items-center justify-center space-x-2">
+[5:19:23 PM] [CODEX_STREAM]     <span>🔥 Promo Grand Opening: Diskon s/d 50% + Gratis Ongkir se-Indonesia! Kode Voucher: <b class="underline font-bold tracking-wider">FALSTORE50</b></span>
+[5:19:23 PM] [CODEX_STREAM]   </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]   <!-- Navbar -->
+[5:19:23 PM] [CODEX_STREAM]   <header class="sticky top-0 z-40 glass border-b border-slate-800">
+[5:19:23 PM] [CODEX_STREAM]     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+[5:19:23 PM] [CODEX_STREAM]       
+[5:19:23 PM] [CODEX_STREAM]       <!-- Brand Logo -->
+[5:19:23 PM] [CODEX_STREAM]       <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('store')">
+[5:19:23 PM] [CODEX_STREAM]         <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-500 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-blue-500/25">
+[5:19:23 PM] [CODEX_STREAM]           <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+[5:19:23 PM] [CODEX_STREAM]         </div>
+[5:19:23 PM] [CODEX_STREAM]         <div>
+[5:19:23 PM] [CODEX_STREAM]           <span class="text-xl font-extrabold tracking-tight text-white flex items-center gap-1">
+[5:19:23 PM] [CODEX_STREAM]             FalStore <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">Official</span>
+[5:19:23 PM] [CODEX_STREAM]           </span>
+[5:19:23 PM] [CODEX_STREAM]           <p class="text-[11px] text-slate-400">E-Commerce Terpercaya</p>
+[5:19:23 PM] [CODEX_STREAM]         </div>
+[5:19:23 PM] [CODEX_STREAM]       </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]       <!-- Search Bar -->
+[5:19:23 PM] [CODEX_STREAM]       <div class="flex-1 max-w-md hidden md:block" id="nav-search-bar">
+[5:19:23 PM] [CODEX_STREAM]         <div class="relative">
+[5:19:23 PM] [CODEX_STREAM]           <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+[5:19:23 PM] [CODEX_STREAM]           <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Cari baju, sepatu, gadget impianmu..." class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+[5:19:23 PM] [CODEX_STREAM]         </div>
+[5:19:23 PM] [CODEX_STREAM]       </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]       <!-- Actions -->
+[5:19:23 PM] [CODEX_STREAM]       <div class="flex items-center space-x-2 sm:space-x-3">
+[5:19:23 PM] [CODEX_STREAM]         <!-- Track Order Button -->
+[5:19:23 PM] [CODEX_STREAM]         <button onclick="openTrackModal()" class="inline-flex items-center space-x-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs px-3 py-2 rounded-xl text-slate-300 transition-all">
+[5:19:23 PM] [CODEX_STREAM]           <i data-lucide="search" class="w-4 h-4 text-blue-400"></i>
+[5:19:23 PM] [CODEX_STREAM]           <span class="hidden sm:inline">Lacak Pesanan</span>
+[5:19:23 PM] [CODEX_STREAM]         </button>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]         <!-- Admin Dashboard Switcher -->
+[5:19:23 PM] [CODEX_STREAM]         <button onclick="toggleAdminView()" id="btn-admin-toggle" class="inline-flex items-center space-x-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs px-3 py-2 rounded-xl text-amber-400 transition-all">
+[5:19:23 PM] [CODEX_STREAM]           <i data-lucide="settings" class="w-4 h-4"></i>
+[5:19:23 PM] [CODEX_STREAM]           <span class="hidden sm:inline" id="admin-toggle-text">Admin Panel</span>
+[5:19:23 PM] [CODEX_STREAM]         </button>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]         <!-- Live AI Badge -->
+[5:19:23 PM] [CODEX_STREAM]         <a href="https://agent.naufal.me" target="_blank" class="hidden lg:inline-flex items-center space-x-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs px-3 py-2 rounded-xl text-slate-300 transition-all">
+[5:19:23 PM] [CODEX_STREAM]           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+[5:19:23 PM] [CODEX_STREAM]           <span>AI Squad</span>
+[5:19:23 PM] [CODEX_STREAM]         </a>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]         <!-- Cart Button -->
+[5:19:23 PM] [CODEX_STREAM]         <button onclick="toggleCartDrawer(true)" class="relative bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white p-2.5 rounded-xl shadow-lg shadow-blue-600/25 flex items-center space-x-2 transition-all">
+[5:19:23 PM] [CODEX_STREAM]           <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+[5:19:23 PM] [CODEX_STREAM]           <span class="hidden sm:inline text-xs font-semibold">Keranjang</span>
+[5:19:23 PM] [CODEX_STREAM]           <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md">0</span>
+[5:19:23 PM] [CODEX_STREAM]         </button>
+[5:19:23 PM] [CODEX_STREAM]       </div>
+[5:19:23 PM] [CODEX_STREAM]     </div>
+[5:19:23 PM] [CODEX_STREAM]   </header>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]   <!-- STOREFRONT VIEW -->
+[5:19:23 PM] [CODEX_STREAM]   <div id="view-store">
+[5:19:23 PM] [CODEX_STREAM]     <!-- Hero Section -->
+[5:19:23 PM] [CODEX_STREAM]     <section class="relative overflow-hidden pt-12 pb-16 gradient-glow border-b border-slate-800/80">
+[5:19:23 PM] [CODEX_STREAM]       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+[5:19:23 PM] [CODEX_STREAM]         
+[5:19:23 PM] [CODEX_STREAM]         <div class="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 px-3.5 py-1.5 rounded-full text-xs font-medium text-blue-400">
+[5:19:23 PM] [CODEX_STREAM]           <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+[5:19:23 PM] [CODEX_STREAM]           <span>Koleksi Spesial Musim Ini Telah Hadir</span>
+[5:19:23 PM] [CODEX_STREAM]         </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]         <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-3xl mx-auto leading-tight sm:leading-none">
+[5:19:23 PM] [CODEX_STREAM]           Belanja Kebutuhan Favorit <br>
+[5:19:23 PM] [CODEX_STREAM]           <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300">Lebih Cepat, Mudah, & Hemat.</span>
+[5:19:23 PM] [CODEX_STREAM]         </h1>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]         <p class="text-sm sm:text-base text-slate-400 max-w-xl mx-auto">
+[5:19:23 PM] [CODEX_STREAM]           Temukan berbagai produk berkualitas pilihan mulai dari fashion, gadget, aksesoris, hingga kebutuhan harian dengan jaminan 100% original.
+[5:19:23 PM] [CODEX_STREAM]         </p>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]         <!-- Trust Badges -->
+[5:19:23 PM] [CODEX_STREAM]         <div class="pt-6 flex flex-wrap justify-center items-center gap-6 sm:gap-10 text-xs text-slate-400">
+[5:19:23 PM] [CODEX_STREAM]           <div class="flex items-center space-x-2"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i><span>100% Original</span></div>
+[5:19:23 PM] [CODEX_STREAM]           <div class="flex items-center space-x-2"><i data-lucide="truck" class="w-4 h-4 text-blue-400"></i><span>Pengiriman Cepat</span></div>
+[5:19:23 PM] [CODEX_STREAM]           <div class="flex items-center space-x-2"><i data-lucide="credit-card" class="w-4 h-4 text-purple-400"></i><span>Pembayaran Aman (QRIS & VA)</span></div>
+[5:19:23 PM] [CODEX_STREAM]           <div class="flex items-center space-x-2"><i data-lucide="refresh-cw" class="w-4 h-4 text-amber-400"></i><span>Garansi Retur 7 Hari</span></div>
+[5:19:23 PM] [CODEX_STREAM]         </div>
+[5:19:23 PM] [CODEX_STREAM]       </div>
+[5:19:23 PM] [CODEX_STREAM]     </section>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]     <!-- Catalog Section -->
+[5:19:23 PM] [CODEX_STREAM]     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+[5:19:23 PM] [CODEX_STREAM]       <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
+[5:19:23 PM] [CODEX_STREAM]         <div>
+[5:19:23 PM] [CODEX_STREAM]           <h2 class="text-2xl font-bold text-white tracking-tight">Katalog Produk</h2>
+[5:19:23 PM] [CODEX_STREAM]           <p class="text-xs text-slate-400 mt-1">Produk terhubung langsung ke PostgreSQL Database di VPS</p>
+[5:19:23 PM] [CODEX_STREAM]         </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]         <!-- Category Pills -->
+[5:19:23 PM] [CODEX_STREAM]         <div class="flex flex-wrap gap-2 text-xs font-semibold" id="category-pills">
+[5:19:23 PM] [CODEX_STREAM]           <button onclick="filterCategory('all')" id="cat-all" class="cat-pill px-4 py-2 rounded-xl bg-blue-600 text-white shadow-md shadow-blue-600/20">Semua Produk</button>
+[5:19:23 PM] [CODEX_STREAM]           <button onclick="filterCategory('fashion')" id="cat-fashion" class="cat-pill px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">👕 Fashion</button>
+[5:19:23 PM] [CODEX_STREAM]           <button onclick="filterCategory('gadget')" id="cat-gadget" class="cat-pill px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">📱 Gadget</button>
+[5:19:23 PM] [CODEX_STREAM]           <button onclick="filterCategory('sepatu')" id="cat-sepatu" class="cat-pill px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">👟 Sepatu</button>
+[5:19:23 PM] [CODEX_STREAM]           <button onclick="filterCategory('aksesoris')" id="cat-aksesoris" class="cat-pill px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">⌚ Aksesoris</button>
+[5:19:23 PM] [CODEX_STREAM]         </div>
+[5:19:23 PM] [CODEX_STREAM]       </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]       <!-- Product Grid -->
+[5:19:23 PM] [CODEX_STREAM]       <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-20">
+[5:19:23 PM] [CODEX_STREAM]         <!-- Rendered via JS -->
+[5:19:23 PM] [CODEX_STREAM]       </div>
+[5:19:23 PM] [CODEX_STREAM]     </section>
+[5:19:23 PM] [CODEX_STREAM]   </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]   <!-- ADMIN MANAGEMENT VIEW -->
+[5:19:23 PM] [CODEX_STREAM]   <div id="view-admin" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 flex-1 w-full">
+[5:19:23 PM] [CODEX_STREAM]     <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+[5:19:23 PM] [CODEX_STREAM]       <div>
+[5:19:23 PM] [CODEX_STREAM]         <h2 class="text-2xl font-extrabold text-white flex items-center space-x-2">
+[5:19:23 PM] [CODEX_STREAM]           <span>⚙️ Panel Manajemen Toko (Admin)</span>
+[5:19:23 PM] [CODEX_STREAM]         </h2>
+[5:19:23 PM] [CODEX_STREAM]         <p class="text-xs text-slate-400 mt-1">Kelola data produk, stok, dan status pesanan yang tersimpan di PostgreSQL</p>
+[5:19:23 PM] [CODEX_STREAM]       </div>
+[5:19:23 PM] [CODEX_STREAM]       <button onclick="openAddProductModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl font-bold text-xs shadow-lg shadow-blue-600/25 flex items-center space-x-2">
+[5:19:23 PM] [CODEX_STREAM]         <i data-lucide="plus" class="w-4 h-4"></i>
+[5:19:23 PM] [CODEX_STREAM]         <span>Tambah Produk Baru</span>
+[5:19:23 PM] [CODEX_STREAM]       </button>
+[5:19:23 PM] [CODEX_STREAM]     </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]     <!-- Admin Metric Cards -->
+[5:19:23 PM] [CODEX_STREAM]     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+[5:19:23 PM] [CODEX_STREAM]       <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-2">
+[5:19:23 PM] [CODEX_STREAM]         <div class="flex items-center justify-between text-slate-400 text-xs">
+[5:19:23 PM] [CODEX_STREAM]           <span>Total Omset (Revenue)</span>
+[5:19:23 PM] [CODEX_STREAM]           <i data-lucide="wallet" class="w-4 h-4 text-emerald-400"></i>
+[5:19:23 PM] [CODEX_STREAM]         </div>
+[5:19:23 PM] [CODEX_STREAM]         <div class="text-2xl font-extrabold text-emerald-400 font-mono" id="adm-revenue">Rp 0</div>
+[5:19:23 PM] [CODEX_STREAM]       </div>
+[5:19:23 PM] [CODEX_STREAM]       <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-2">
+[5:19:23 PM] [CODEX_STREAM]         <div class="flex items-center justify-between text-slate-400 text-xs">
+[5:19:23 PM] [CODEX_STREAM]           <span>Total Pesanan Masuk</span>
+[5:19:23 PM] [CODEX_STREAM]           <i data-lucide="shopping-cart" class="w-4 h-4 text-blue-400"></i>
+[5:19:23 PM] [CODEX_STREAM]         </div>
+[5:19:23 PM] [CODEX_STREAM]         <div class="text-2xl font-extrabold text-white font-mono" id="adm-orders-count">0</div>
+[5:19:23 PM] [CODEX_STREAM]       </div>
+[5:19:23 PM] [CODEX_STREAM]       <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-2">
+[5:19:23 PM] [CODEX_STREAM]         <div class="flex items-center justify-between text-slate-400 text-xs">
+[5:19:23 PM] [CODEX_STREAM]           <span>Total Produk Aktif</span>
+[5:19:23 PM] [CODEX_STREAM]           <i data-lucide="package" class="w-4 h-4 text-purple-400"></i>
+[5:19:23 PM] [CODEX_STREAM]         </div>
+[5:19:23 PM] [CODEX_STREAM]         <div class="text-2xl font-extrabold text-white font-mono" id="adm-products-count">0</div>
+[5:19:23 PM] [CODEX_STREAM]       </div>
+[5:19:23 PM] [CODEX_STREAM]     </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]     <!-- Orders Table -->
+[5:19:23 PM] [CODEX_STREAM]     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+[5:19:23 PM] [CODEX_STREAM]       <h3 class="font-bold text-base text-white flex items-center space-x-2">
+[5:19:23 PM] [CODEX_STREAM]         <i data-lucide="list-ordered" class="w-5 h-5 text-blue-400"></i>
+[5:19:23 PM] [CODEX_STREAM]         <span>Daftar Pesanan Customer</span>
+[5:19:23 PM] [CODEX_STREAM]       </h3>
+[5:19:23 PM] [CODEX_STREAM]       <div class="overflow-x-auto">
+[5:19:23 PM] [CODEX_STREAM]         <table class="w-full text-xs text-left text-slate-300">
+[5:19:23 PM] [CODEX_STREAM]           <thead class="bg-slate-950 text-slate-400 border-b border-slate-800 uppercase font-mono text-[10px]">
+[5:19:23 PM] [CODEX_STREAM]             <tr>
+[5:19:23 PM] [CODEX_STREAM]               <th class="p-3">Invoice ID</th>
+[5:19:23 PM] [CODEX_STREAM]               <th class="p-3">Customer</th>
+[5:19:23 PM] [CODEX_STREAM]               <th class="p-3">Kurir / Metode</th>
+[5:19:23 PM] [CODEX_STREAM]               <th class="p-3">Total</th>
+[5:19:23 PM] [CODEX_STREAM]               <th class="p-3">Status</th>
+[5:19:23 PM] [CODEX_STREAM]               <th class="p-3 text-right">Aksi</th>
+[5:19:23 PM] [CODEX_STREAM]             </tr>
+[5:19:23 PM] [CODEX_STREAM]           </thead>
+[5:19:23 PM] [CODEX_STREAM]           <tbody id="adm-orders-tbody" class="divide-y divide-slate-800">
+[5:19:23 PM] [CODEX_STREAM]             <tr><td colspan="6" class="p-4 text-center text-slate-500">Memuat data pesanan...</td></tr>
+[5:19:23 PM] [CODEX_STREAM]           </tbody>
+[5:19:23 PM] [CODEX_STREAM]         </table>
+[5:19:23 PM] [CODEX_STREAM]       </div>
+[5:19:23 PM] [CODEX_STREAM]     </div>
+[5:19:23 PM] [CODEX_STREAM]   </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]   <!-- Slide-over Cart Drawer -->
+[5:19:23 PM] [CODEX_STREAM]   <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+[5:19:23 PM] [CODEX_STREAM]     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer(false)"></div>
+[5:19:23 PM] [CODEX_STREAM]     <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+[5:19:23 PM] [CODEX_STREAM]       <div class="w-screen max-w-md bg-slate-900 border-l border-slate-800 p-6 flex flex-col shadow-2xl">
+[5:19:23 PM] [CODEX_STREAM]         
+[5:19:23 PM] [CODEX_STREAM]         <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+[5:19:23 PM] [CODEX_STREAM]           <div class="flex items-center space-x-2">
+[5:19:23 PM] [CODEX_STREAM]             <i data-lucide="shopping-bag" class="w-5 h-5 text-blue-400"></i>
+[5:19:23 PM] [CODEX_STREAM]             <h3 class="font-bold text-lg text-white">Keranjang Belanja</h3>
+[5:19:23 PM] [CODEX_STREAM]           </div>
+[5:19:23 PM] [CODEX_STREAM]           <button onclick="toggleCartDrawer(false)" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+[5:19:23 PM] [CODEX_STREAM]         </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]         <div id="cart-items-container" class="flex-1 overflow-y-auto py-4 space-y-3 custom-scrollbar"></div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]         <div class="pt-4 border-t border-slate-800 space-y-3">
+[5:19:23 PM] [CODEX_STREAM]           <div class="flex gap-2">
+[5:19:23 PM] [CODEX_STREAM]             <input type="text" id="voucher-input" placeholder="Kode voucher: FALSTORE50" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white uppercase tracking-wider focus:outline-none focus:border-blue-500">
+[5:19:23 PM] [CODEX_STREAM]             <button onclick="applyVoucher()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-2 rounded-xl text-xs font-semibold text-slate-200">Gunakan</button>
+[5:19:23 PM] [CODEX_STREAM]           </div>
+[5:19:23 PM] [CODEX_STREAM]           <div id="voucher-notice" class="text-[11px] text-emerald-400 font-medium hidden">✓ Voucher Diskon 50% Aktif!</div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]           <div class="space-y-1.5 text-xs text-slate-400 pt-1">
+[5:19:23 PM] [CODEX_STREAM]             <div class="flex justify-between"><span>Subtotal:</span><span id="cart-subtotal" class="font-mono text-white">Rp 0</span></div>
+[5:19:23 PM] [CODEX_STREAM]             <div class="flex justify-between text-emerald-400" id="discount-row" style="display:none"><span>Diskon Voucher:</span><span id="cart-discount" class="font-mono">-Rp 0</span></div>
+[5:19:23 PM] [CODEX_STREAM]             <div class="flex justify-between text-sm font-bold text-white pt-2 border-t border-slate-800">
+[5:19:23 PM] [CODEX_STREAM]               <span>Total Tagihan:</span>
+[5:19:23 PM] [CODEX_STREAM]               <span id="cart-total" class="font-mono text-blue-400 text-base">Rp 0</span>
+[5:19:23 PM] [CODEX_STREAM]             </div>
+[5:19:23 PM] [CODEX_STREAM]           </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]           <button onclick="openCheckoutModal()" id="btn-checkout" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2 transition-all">
+[5:19:23 PM] [CODEX_STREAM]             <span>Lanjut ke Pembayaran</span>
+[5:19:23 PM] [CODEX_STREAM]             <i data-lucide="arrow-right" class="w-4 h-4"></i>
+[5:19:23 PM] [CODEX_STREAM]           </button>
+[5:19:23 PM] [CODEX_STREAM]         </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]       </div>
+[5:19:23 PM] [CODEX_STREAM]     </div>
+[5:19:23 PM] [CODEX_STREAM]   </div>
+[5:19:23 PM] [CODEX_STREAM] 
+[5:19:23 PM] [CODEX_STREAM]   <!-- Checkout Modal -->
+[5:19:23 PM] [CODEX_STREAM]   <div id="checkout-modal" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+[5:19:23 PM] [CODEX_STREAM]     <div class="bg-slate-900 border border-slate-800 max-w-lg w-full rounded-2xl p-6 shadow-2xl space-y-5 text-sm">
+[5:19:27 PM] [CODEX_STREAM] exec
+[5:19:27 PM] [CODEX_STREAM] /bin/bash -lc "ps -eo pid,cmd | rg '[n]ode (server\\.js|/var/www/ecommerce/server\\.js)' || true
+[5:19:27 PM] [CODEX_STREAM] curl -sS --max-time 3 http://127.0.0.1:3000/api/products | head -c 300 || true" in /var/www/ecommerce
+[5:19:27 PM] [CODEX_STREAM] succeeded in 0ms:
+[5:19:27 PM] [CODEX_STREAM] curl: (7) failed to open socket: Operation not permitted
+[5:19:31 PM] [CODEX_STREAM] codex
+[5:19:31 PM] [CODEX_STREAM] FalStore telah menjadi MVP e-commerce lengkap (katalog, keranjang, checkout, pelacakan, dan panel admin) berbasis Express/PostgreSQL, tetapi belum memiliki pengujian otomatis maupun repositori Git.
+[5:19:31 PM] [CODEX_STREAM] tokens used
+[5:19:31 PM] [CODEX_STREAM] 30,145
+[5:19:31 PM] [CODEX_OUT] FalStore telah menjadi MVP e-commerce lengkap (katalog, keranjang, checkout, pelacakan, dan panel admin) berbasis Express/PostgreSQL, tetapi belum memiliki pengujian otomatis maupun repositori Git.
+[5:19:31 PM] [CODEX_DONE] Eksekusi selesai (Exit code: 0)

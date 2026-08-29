@@ -1,0 +1,27 @@
+{"type":"task_updated","task":{"id":"TASK-102","title":"Product Catalog API & Search Endpoint","role":"Backend Dev","status":"DONE","description":"Implement CRUD endpoints for products, category filtering, and fulltext search."},"message":"[Backend Dev] Status task TASK-102 diubah menjadi: DONE","timestamp":"2026-08-29T16:58:13.812Z"}
+{"type":"task_updated","task":{"id":"TASK-103","title":"Responsive Storefront UI & Navbar","role":"Frontend Dev","status":"TODO","description":"Build Next.js Tailwind home page with banner, category grid, and shopping cart drawer."},"message":"[Frontend Dev] Status task TASK-103 diubah menjadi: TODO","timestamp":"2026-08-29T16:58:14.519Z"}
+{"type":"task_updated","task":{"id":"TASK-103","title":"Responsive Storefront UI & Navbar","role":"Frontend Dev","status":"IN_PROGRESS","description":"Build Next.js Tailwind home page with banner, category grid, and shopping cart drawer."},"message":"[Frontend Dev] Status task TASK-103 diubah menjadi: IN_PROGRESS","timestamp":"2026-08-29T16:58:16.315Z"}
+{"type":"task_updated","task":{"id":"TASK-104","title":"Midtrans Payment Gateway & Webhook","role":"Backend Dev","status":"DONE","description":"Setup Snap token generation and handle payment status callback notifications."},"message":"[Backend Dev] Status task TASK-104 diubah menjadi: DONE","timestamp":"2026-08-29T16:58:18.234Z"}
+{"type":"task_updated","task":{"id":"TASK-105","title":"End-to-End Checkout Flow Testing","role":"QA & Security","status":"DONE","description":"Simulate user purchase, cart manipulation, and payment validation tests."},"message":"[QA & Security] Status task TASK-105 diubah menjadi: DONE","timestamp":"2026-08-29T16:58:19.558Z"}
+{"type":"task_updated","task":{"id":"TASK-103","title":"Responsive Storefront UI & Navbar","role":"Frontend Dev","status":"DONE","description":"Build Next.js Tailwind home page with banner, category grid, and shopping cart drawer."},"message":"[Frontend Dev] Status task TASK-103 diubah menjadi: DONE","timestamp":"2026-08-29T16:58:21.756Z"}
+{"type":"log","message":"[PM] Sprint 1: Inisialisasi E-Commerce Storefront (FalStore) selesai.","timestamp":"2026-08-29T17:02:40Z"}
+{"type":"log","message":"[Architect] Knowledge Graph (Graphify) memetakan katalog produk, keranjang, dan order flow.","timestamp":"2026-08-29T17:02:40Z"}
+{"type":"log","message":"[Frontend Dev] Mengintegrasikan 21st.dev UI: Hero glow banner, product catalog grid, slide-over cart drawer, checkout modal.","timestamp":"2026-08-29T17:02:40Z"}
+{"type":"log","message":"[Backend Dev] Mengimplementasikan simulasi QRIS & Virtual Account payment processing.","timestamp":"2026-08-29T17:02:40Z"}
+{"type":"log","message":"[QA & Security] Menguji validasi perhitungan diskon voucher (FALSTORE50) dan responsivitas layout: PASS.","timestamp":"2026-08-29T17:02:40Z"}
+{"type":"log","message":"[PM] Inisialisasi Sprint 2: Menyiapkan integrasi Database PostgreSQL & Midtrans Payment Gateway.","timestamp":"2026-08-29T17:04:33Z"}
+{"type":"log","message":"[Architect] Graphify mengekstrak relasi tabel Order, Payment, dan Produk untuk Backend.","timestamp":"2026-08-29T17:04:33Z"}
+{"type":"log","message":"[QA & Security] Pesanan baru masuk: INV-2026-6351 senilai Rp 164.000 (Customer: Naufal Muhammad). Verifikasi stok & payment: PASS.","timestamp":"2026-08-29T17:07:12.033Z"}
+{"type":"log","message":"[Architect] Container PostgreSQL 16 (falstore_db) siap dan terhubung ke REST API.","timestamp":"2026-08-29T17:07:28Z"}
+{"type":"log","message":"[Backend Dev] Endpoint CRUD Products (/api/products) dan Orders (/api/orders) aktif dan teruji.","timestamp":"2026-08-29T17:07:28Z"}
+{"type":"log","message":"[Frontend Dev] Panel Admin Terpadu & Fitur Lacak Pesanan (Track Order) selesai diintegrasikan.","timestamp":"2026-08-29T17:07:28Z"}
+{"type":"log","message":"[QA & Security] Simulasi Checkout End-to-End dengan invoice INV-2026-6351 berhasil disimpan ke database.","timestamp":"2026-08-29T17:07:28Z"}
+{"type":"log","message":"[PM] Semua task Sprint 2 telah selesai (100% DONE). Aplikasi E-Commerce FalStore resmi siap pakai!","timestamp":"2026-08-29T17:07:28Z"}
+{"type":"log","message":"[QA & Security] Pesanan baru masuk: INV-2026-8672 senilai Rp 913.000 (Customer: Naufal). Verifikasi stok & payment: PASS.","timestamp":"2026-08-29T17:08:21.709Z"}
+{"type":"log","message":"[PM] User mengirim instruksi langsung: \"Echo status check and check ecommerce files\"","timestamp":"2026-08-29T17:17:09.059Z"}
+{"type":"log","message":"[PM] User mengirim instruksi: \"Tuliskan status proyek saat ini dalam 1 baris ringkas\"","timestamp":"2026-08-29T17:19:06.356Z"}
+{"type":"log","message":"[Backend Dev] Eksekusi instruksi selesai (Exit: 0).","timestamp":"2026-08-29T17:19:31.995Z"}
+{"type":"log","message":"[PM] Status order INV-2026-8672 diperbarui menjadi \"Diproses\".","timestamp":"2026-08-29T17:44:50.674Z"}
+{"type":"log","message":"[PM] Status order INV-2026-8672 diperbarui menjadi \"Dikirim\".","timestamp":"2026-08-29T17:44:52.111Z"}
+{"type":"log","message":"[PM] Status order INV-2026-8672 diperbarui menjadi \"Selesai\".","timestamp":"2026-08-29T17:44:53.461Z"}
+{"type":"log","message":"[QA & Security] Pesanan baru masuk: INV-2026-7546 senilai Rp 453.000 (Customer: Naufal Muhammad). Verifikasi stok & payment: PASS.","timestamp":"2026-08-29T17:57:19.099Z"}

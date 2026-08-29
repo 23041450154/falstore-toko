@@ -1,0 +1,114 @@
+[
+  {
+    "id": "TASK-101",
+    "sprint": "Sprint 1",
+    "title": "Storefront Scaffolding & 21st.dev UI Design",
+    "role": "Frontend Dev",
+    "status": "DONE",
+    "description": "Membangun Hero section, katalog produk, filter kategori, dan responsive layout."
+  },
+  {
+    "id": "TASK-102",
+    "sprint": "Sprint 1",
+    "title": "Interactive Product Catalog & Category Filter",
+    "role": "Frontend Dev",
+    "status": "DONE",
+    "description": "Menampilkan katalog produk dengan rating, label diskon, dan pencarian real-time."
+  },
+  {
+    "id": "TASK-103",
+    "sprint": "Sprint 1",
+    "title": "Slide-over Shopping Cart & Voucher Logic",
+    "role": "Frontend Dev",
+    "status": "DONE",
+    "description": "Implementasi state keranjang belanja persisten dan perhitungan diskon voucher FALSTORE50."
+  },
+  {
+    "id": "TASK-201",
+    "sprint": "Sprint 2",
+    "title": "PostgreSQL 16 Database Setup & Table Schemas",
+    "role": "Architect",
+    "status": "DONE",
+    "description": "Setup container PostgreSQL 16 (falstore_db) dan relasi tabel products serta orders."
+  },
+  {
+    "id": "TASK-202",
+    "sprint": "Sprint 2",
+    "title": "REST API Endpoints for Products & Orders",
+    "role": "Backend Dev",
+    "status": "DONE",
+    "description": "Pembuatan REST API /api/products, /api/orders, dan /api/stats terhubung ke DB."
+  },
+  {
+    "id": "TASK-203",
+    "sprint": "Sprint 2",
+    "title": "Real-time Order Tracking & Invoice Generator",
+    "role": "Backend Dev",
+    "status": "IN_PROGRESS",
+    "description": "Modul pelacakan invoice ID real-time dan simulasi QRIS code untuk customer."
+  },
+  {
+    "id": "TASK-204",
+    "sprint": "Sprint 2",
+    "title": "Admin Dashboard Panel for Orders & Stock",
+    "role": "Frontend Dev",
+    "status": "IN_PROGRESS",
+    "description": "Panel admin terintegrasi untuk melihat omset penjualan, kelola status pesanan, dan input produk."
+  },
+  {
+    "id": "TASK-301",
+    "sprint": "Sprint 3",
+    "title": "Midtrans Snap & QRIS Production Sandbox",
+    "role": "Backend Dev",
+    "status": "TODO",
+    "description": "Integrasi gateway pembayaran resmi Midtrans dengan verifikasi callback webhook."
+  },
+  {
+    "id": "TASK-302",
+    "sprint": "Sprint 3",
+    "title": "RajaOngkir API Live Courier Rates",
+    "role": "Backend Dev",
+    "status": "TODO",
+    "description": "Perhitungan tarif ongkos kirim otomatis berdasarkan berat produk dan kota tujuan."
+  },
+  {
+    "id": "TASK-303",
+    "sprint": "Sprint 3",
+    "title": "WhatsApp Webhook Notification for Invoices",
+    "role": "Backend Dev",
+    "status": "TODO",
+    "description": "Pengiriman pesan konfirmasi otomatis ke nomor WhatsApp pembeli saat checkout berhasil."
+  },
+  {
+    "id": "TASK-304",
+    "sprint": "Sprint 3",
+    "title": "Payment Security & Webhook Signature Validation",
+    "role": "QA & Security",
+    "status": "TODO",
+    "description": "Pengujian keamanan endpoint callback, validasi signature SHA-512, dan anti-tampering."
+  },
+  {
+    "id": "TASK-401",
+    "sprint": "Sprint 4",
+    "title": "Customer Auth (Google OAuth & Member Area)",
+    "role": "Backend Dev",
+    "status": "TODO",
+    "description": "Fitur login akun pembeli dengan Google Sign-In dan riwayat transaksi akun."
+  },
+  {
+    "id": "TASK-402",
+    "sprint": "Sprint 4",
+    "title": "Product Reviews & Customer Photo Upload",
+    "role": "Frontend Dev",
+    "status": "TODO",
+    "description": "Sistem ulasan bintang dan testimoni pembeli dengan upload foto produk."
+  },
+  {
+    "id": "TASK-403",
+    "sprint": "Sprint 4",
+    "title": "Flash Sale Countdown Timer & Promo Banners",
+    "role": "Frontend Dev",
+    "status": "TODO",
+    "description": "Fitur timer hitung mundur diskon kilat dan banner promo dinamis pada beranda."
+  }
+]
