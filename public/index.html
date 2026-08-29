@@ -77,14 +77,12 @@
     
     /* Animations */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes scaleUp { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    @keyframes scaleUp { from { opacity: 0; transform: scale(0.98) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     @keyframes bounceBadge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
-    @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(255, 255, 255, 0.05); } 50% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.15); } }
 
-    .anim-fade-in { animation: fadeIn 0.25s ease-out forwards; }
-    .anim-scale-up { animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .anim-fade-in { animation: fadeIn 0.22s ease-out forwards; }
+    .anim-scale-up { animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     .badge-bounce { animation: bounceBadge 0.3s ease-in-out; }
-    .glow-card { animation: pulseGlow 4s infinite; }
 
     /* Top Page Transition Progress Bar */
     #top-loading-bar {
@@ -205,37 +203,20 @@
       <!-- Action Buttons -->
       <div class="flex items-center gap-2.5 sm:gap-3">
         
-        <!-- User Account / Login Button (DYNAMIC STATE) -->
+        <!-- User Account / Login Button (FULL-PAGE DIRECT) -->
         <div class="relative" id="user-auth-wrapper">
           <!-- Logged Out State Button -->
-          <button type="button" onclick="openAuthModal()" id="btn-login-trigger" class="h-10 px-3.5 border hairline hover:border-white text-[10px] uppercase tracking-[0.15em] font-medium inline-flex items-center gap-2 transition-all">
+          <button type="button" onclick="switchView('auth')" id="btn-login-trigger" class="h-10 px-3.5 border hairline hover:border-white text-[10px] uppercase tracking-[0.15em] font-medium inline-flex items-center gap-2 transition-all">
             <i data-lucide="user" class="w-3.5 h-3.5 text-zinc-300"></i>
             <span class="hidden sm:inline">Masuk</span>
           </button>
 
           <!-- Logged In State Button & Dropdown Menu -->
           <div id="user-profile-menu" class="hidden relative">
-            <button type="button" onclick="toggleUserDropdown()" class="h-10 px-3 border hairline hover:border-white text-xs inline-flex items-center gap-2 transition-all bg-ink">
+            <button type="button" onclick="switchView('account')" class="h-10 px-3.5 border hairline hover:border-white text-xs inline-flex items-center gap-2 transition-all bg-ink">
               <div class="w-5 h-5 rounded-full bg-white text-obsidian font-bold text-[9px] flex items-center justify-center font-mono" id="user-avatar-initial">N</div>
               <span class="font-medium text-white text-xs max-w-[90px] truncate" id="user-display-name">Naufal</span>
-              <i data-lucide="chevron-down" class="w-3 h-3 text-zinc-400"></i>
             </button>
-
-            <!-- Dropdown Box -->
-            <div id="user-dropdown-box" class="hidden absolute right-0 mt-2 w-48 bg-ink border hairline shadow-2xl py-2 z-50 text-xs anim-scale-up space-y-1">
-              <div class="px-4 py-2 border-b hairline">
-                <span class="text-[10px] text-zinc-500 uppercase tracking-wider block">Akun WhatsApp</span>
-                <span class="text-xs font-mono font-bold text-white" id="user-display-phone">6281234567890</span>
-              </div>
-              <button type="button" onclick="viewUserOrders()" class="w-full text-left px-4 py-2 hover:bg-zinc-900 text-zinc-300 hover:text-white flex items-center gap-2">
-                <i data-lucide="package" class="w-3.5 h-3.5"></i>
-                <span>Pesanan Saya</span>
-              </button>
-              <button type="button" onclick="logoutUser()" class="w-full text-left px-4 py-2 hover:bg-zinc-900 text-rose-400 flex items-center gap-2 border-t hairline">
-                <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-                <span>Keluar Akun</span>
-              </button>
-            </div>
           </div>
         </div>
 
@@ -621,7 +602,178 @@
     </div>
   </main>
 
-  <!-- 4. ADMIN DASHBOARD VIEW -->
+  <!-- 4. FULL-PAGE AUTHENTICATION VIEW (DEDICATED SHOPEE/EDITORIAL LOGIN PAGE) -->
+  <main id="view-auth" class="hidden max-w-[1100px] mx-auto px-4 sm:px-8 py-10 sm:py-16 w-full flex-1 anim-fade-in">
+    
+    <!-- Breadcrumbs -->
+    <div class="flex items-center gap-2 text-xs text-zinc-500 mb-8 border-b hairline pb-4">
+      <button type="button" onclick="switchView('store')" class="hover:text-white flex items-center gap-1 text-[11px] uppercase tracking-wider font-semibold">
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+        <span>Beranda</span>
+      </button>
+      <span>/</span>
+      <span class="text-zinc-300 font-semibold">Masuk Akun Member</span>
+    </div>
+
+    <!-- Editorial Auth Split Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 border hairline bg-ink overflow-hidden">
+      
+      <!-- Left 6 Cols: Brand Editorial Showcase -->
+      <div class="lg:col-span-6 p-8 sm:p-12 bg-obsidian flex flex-col justify-between border-b lg:border-b-0 lg:border-r hairline relative">
+        <div class="space-y-6">
+          <div class="flex items-baseline gap-2">
+            <span class="text-2xl font-extrabold tracking-tight text-white">FalStore</span>
+            <span class="font-editorial italic text-zinc-500 text-xl">&eacute;tude</span>
+          </div>
+
+          <div class="space-y-2">
+            <span class="eyebrow text-emerald-400">Membership Keanggotaan</span>
+            <h2 class="text-3xl sm:text-4xl font-bold text-white leading-tight">
+              Akses cepat,<br><span class="font-editorial italic font-normal text-zinc-300">langsung terhubung WhatsApp.</span>
+            </h2>
+          </div>
+
+          <p class="text-xs text-zinc-400 leading-relaxed">
+            Tidak perlu menghafal kata sandi rumit. Masuk dengan nomor WhatsApp Anda untuk menikmati kemudahan berbelanja dan lacak status paket secara otomatis.
+          </p>
+
+          <div class="pt-4 space-y-3">
+            <div class="flex items-start gap-3 text-xs text-zinc-300">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+              <span>Lacak resi dan mutasi transaksi secara otomatis</span>
+            </div>
+            <div class="flex items-start gap-3 text-xs text-zinc-300">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+              <span>Data nama & alamat terisi otomatis di setiap checkout</span>
+            </div>
+            <div class="flex items-start gap-3 text-xs text-zinc-300">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+              <span>Prioritas klaim voucher diskon eksklusif member</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-10 border-t hairline mt-8 text-[11px] text-zinc-500 font-mono">
+          FalStore &bull; Enkripsi SSL Terverifikasi &bull; 2026
+        </div>
+      </div>
+
+      <!-- Right 6 Cols: Sharp Authentication Form -->
+      <div class="lg:col-span-6 p-8 sm:p-12 flex flex-col justify-center space-y-6">
+        
+        <div>
+          <span class="eyebrow">Autentikasi Cepat</span>
+          <h3 class="text-2xl font-bold text-white mt-1">Masuk dengan WhatsApp</h3>
+          <p class="text-xs text-zinc-400 mt-1">Masukkan nomor WhatsApp aktif Anda untuk melanjutkan.</p>
+        </div>
+
+        <form onsubmit="event.preventDefault(); submitWhatsAppLogin(true);" class="space-y-4">
+          <div>
+            <label class="block text-[10px] uppercase tracking-wider text-zinc-400 mb-1.5 font-semibold">Nama Lengkap</label>
+            <input type="text" id="auth-name" placeholder="Nama Anda (contoh: Naufal Muhammad)" class="w-full bg-obsidian border hairline px-4 py-3 text-xs text-white focus:outline-none focus:border-white transition-colors">
+          </div>
+
+          <div>
+            <label class="block text-[10px] uppercase tracking-wider text-zinc-400 mb-1.5 font-semibold">Nomor WhatsApp Aktif</label>
+            <div class="flex">
+              <span class="inline-flex items-center px-4 bg-zinc-900 border-y border-l hairline text-xs text-zinc-300 font-mono font-bold">+62</span>
+              <input type="tel" id="auth-phone" placeholder="81234567890" required class="flex-1 bg-obsidian border hairline px-4 py-3 text-xs text-white font-mono focus:outline-none focus:border-white transition-colors">
+            </div>
+            <p class="text-[10px] text-zinc-500 mt-1 font-mono">Contoh: 81234567890 (tanpa angka 0 di depan)</p>
+          </div>
+
+          <div>
+            <label class="block text-[10px] uppercase tracking-wider text-zinc-400 mb-1.5 font-semibold">Alamat Utama Pengiriman (Opsional)</label>
+            <textarea id="auth-address" rows="2" placeholder="Jl. Jenderal Sudirman No. 45, Palembang..." class="w-full bg-obsidian border hairline px-4 py-2.5 text-xs text-white focus:outline-none focus:border-white transition-colors"></textarea>
+          </div>
+
+          <div class="pt-2 space-y-3">
+            <!-- Direct WhatsApp Login Button -->
+            <button type="submit" id="btn-wa-login" class="w-full h-12 bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] uppercase tracking-[0.16em] font-extrabold flex items-center justify-center gap-2.5 transition-all shadow-lg">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              <span>Masuk via WhatsApp (Direct)</span>
+            </button>
+
+            <!-- Instant Web Login Button -->
+            <button type="button" onclick="submitWhatsAppLogin(false)" class="w-full h-11 border hairline text-zinc-300 hover:text-white text-[10px] uppercase tracking-[0.16em] font-bold flex items-center justify-center gap-2 transition-all">
+              <span>Masuk Instan di Browser</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="border-t hairline pt-4 text-center">
+          <p class="text-[11px] text-zinc-500 leading-relaxed">
+            Butuh bantuan transaksi? Hubungi layanan pelanggan resmi kami di <a href="https://wa.me/6281234567890" target="_blank" class="text-zinc-300 underline">WhatsApp CS</a>.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 5. FULL-PAGE MEMBER ACCOUNT & ORDER HISTORY VIEW -->
+  <main id="view-account" class="hidden max-w-[1240px] mx-auto px-4 sm:px-8 py-8 sm:py-12 w-full flex-1 space-y-8 anim-fade-in">
+    
+    <!-- Breadcrumbs -->
+    <div class="flex items-center justify-between border-b hairline pb-4">
+      <div class="flex items-center gap-3 text-xs text-zinc-500">
+        <button type="button" onclick="switchView('store')" class="hover:text-white flex items-center gap-1 text-[11px] uppercase tracking-wider font-semibold">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>Beranda</span>
+        </button>
+        <span>/</span>
+        <span class="text-zinc-300 font-semibold">Akun Member & Riwayat Pesanan</span>
+      </div>
+      <button type="button" onclick="logoutUser()" class="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1.5 uppercase font-semibold tracking-wider">
+        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+        <span>Keluar Akun</span>
+      </button>
+    </div>
+
+    <!-- Account Details Banner -->
+    <div class="bg-ink border hairline p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-white text-obsidian font-extrabold text-xl flex items-center justify-center font-mono shrink-0 shadow-lg" id="acc-avatar">
+          N
+        </div>
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <h2 class="text-lg font-bold text-white" id="acc-name">Naufal Muhammad</h2>
+            <span class="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[9px] font-mono uppercase tracking-wider font-semibold">Terverifikasi WA</span>
+          </div>
+          <p class="text-xs text-zinc-400 font-mono" id="acc-phone">+62 812-3456-7890</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="switchView('store')" class="h-10 px-4 bg-white text-obsidian font-bold text-[10px] uppercase tracking-[0.16em] inline-flex items-center gap-2 hover:bg-zinc-200 transition-colors">
+          <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
+          <span>Mulai Belanja</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Member Orders Section -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between border-b hairline pb-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="package" class="w-4 h-4 text-zinc-300"></i>
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Daftar Transaksi Saya</h3>
+        </div>
+        <button type="button" onclick="fetchMemberOrders()" class="text-xs text-zinc-400 hover:text-white flex items-center gap-1 font-mono">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Segarkan Data
+        </button>
+      </div>
+
+      <div id="acc-orders-list" class="space-y-4">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 6. ADMIN DASHBOARD VIEW -->
   <main id="view-admin" class="hidden max-w-[1440px] mx-auto px-4 sm:px-8 py-10 w-full flex-1 anim-fade-in">
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b hairline pb-8">
       <div>
@@ -685,84 +837,9 @@
     </div>
   </main>
 
-  <!-- MODAL: LOGIN / MASUK VIA WHATSAPP (NEW FEATURE) -->
-  <div id="modal-auth" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-md anim-fade-in" role="dialog" aria-modal="true">
-    <div class="bg-ink border hairline max-w-md w-full p-6 sm:p-8 relative anim-scale-up space-y-5">
-      
-      <button type="button" onclick="closeAuthModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2" aria-label="Tutup">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
-
-      <div class="text-center space-y-1.5">
-        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto text-emerald-400 mb-2">
-          <i data-lucide="message-circle" class="w-6 h-6"></i>
-        </div>
-        <span class="eyebrow text-emerald-400">Autentikasi Tanpa Password</span>
-        <h3 class="text-2xl font-bold text-white tracking-tight">Masuk Akun Member</h3>
-        <p class="text-xs text-zinc-400">Masuk cepat via WhatsApp untuk simpan alamat dan lacak seluruh pesanan Anda.</p>
-      </div>
-
-      <div class="space-y-3 pt-2">
-        <div>
-          <label class="block text-[10px] uppercase tracking-wider text-zinc-400 mb-1">Nama Lengkap (Opsional)</label>
-          <input type="text" id="auth-name" placeholder="Contoh: Naufal Muhammad" class="w-full bg-obsidian border hairline px-3.5 py-2.5 text-xs text-white focus:outline-none">
-        </div>
-
-        <div>
-          <label class="block text-[10px] uppercase tracking-wider text-zinc-400 mb-1">Nomor WhatsApp Aktif</label>
-          <div class="flex">
-            <span class="inline-flex items-center px-3 bg-zinc-900 border-y border-l hairline text-xs text-zinc-400 font-mono">+62</span>
-            <input type="tel" id="auth-phone" placeholder="81234567890" class="flex-1 bg-obsidian border hairline px-3 py-2.5 text-xs text-white font-mono focus:outline-none">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-[10px] uppercase tracking-wider text-zinc-400 mb-1">Alamat Utama Pengiriman (Opsional)</label>
-          <textarea id="auth-address" rows="2" placeholder="Jl. Sudirman No. 45, Palembang..." class="w-full bg-obsidian border hairline px-3.5 py-2 text-xs text-white focus:outline-none"></textarea>
-        </div>
-      </div>
-
-      <div class="space-y-2 pt-2">
-        <!-- Direct WhatsApp Submit Button -->
-        <button type="button" onclick="submitWhatsAppLogin(true)" id="btn-wa-login" class="w-full h-12 bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] uppercase tracking-[0.16em] font-extrabold flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-900/20">
-          <i data-lucide="message-circle" class="w-4 h-4"></i>
-          <span>Masuk & Buka WhatsApp (Direct)</span>
-        </button>
-
-        <button type="button" onclick="submitWhatsAppLogin(false)" class="w-full h-10 border hairline text-zinc-300 hover:text-white text-[10px] uppercase tracking-[0.16em] font-semibold flex items-center justify-center gap-2 transition-all">
-          <span>Masuk Instan di Web</span>
-        </button>
-      </div>
-
-      <p class="text-[10px] text-zinc-500 text-center leading-relaxed">
-        Dengan masuk, akun Anda akan terhubung otomatis dengan nomor WhatsApp untuk notifikasi resi dan status transaksi.
-      </p>
-
-    </div>
-  </div>
-
-  <!-- MODAL: PESANAN SAYA (MEMBER ORDERS) -->
-  <div id="modal-user-orders" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-md anim-fade-in" role="dialog" aria-modal="true">
-    <div class="bg-ink border hairline max-w-2xl w-full p-6 sm:p-8 relative anim-scale-up space-y-5">
-      <div class="flex items-center justify-between border-b hairline pb-3">
-        <div>
-          <span class="eyebrow text-emerald-400">Riwayat Transaksi</span>
-          <h3 class="mt-1 text-base font-bold text-white">Daftar Pesanan Saya</h3>
-        </div>
-        <button type="button" onclick="closeUserOrdersModal()" class="text-zinc-400 hover:text-white">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <div id="user-orders-list" class="space-y-3 max-h-[60vh] overflow-y-auto custom-scroll">
-        <!-- Rendered by JS -->
-      </div>
-    </div>
-  </div>
-
   <!-- MODAL: PROMO POPUP EKSKLUSIF -->
   <div id="modal-promo" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-md anim-fade-in" role="dialog" aria-modal="true">
-    <div class="bg-ink border hairline max-w-md w-full p-6 sm:p-8 relative anim-scale-up text-center space-y-5 glow-card">
+    <div class="bg-ink border hairline max-w-md w-full p-6 sm:p-8 relative anim-scale-up text-center space-y-5">
       <button type="button" onclick="closePromoModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2" aria-label="Tutup promo">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
@@ -1072,20 +1149,6 @@
     }
 
     // 1. WhatsApp Authentication & Session Handlers
-    function openAuthModal() {
-      document.getElementById('modal-auth').classList.remove('hidden');
-      lucide.createIcons();
-    }
-
-    function closeAuthModal() {
-      document.getElementById('modal-auth').classList.add('hidden');
-    }
-
-    function toggleUserDropdown() {
-      const box = document.getElementById('user-dropdown-box');
-      box.classList.toggle('hidden');
-    }
-
     async function submitWhatsAppLogin(openDirectWhatsApp = true) {
       const rawPhone = document.getElementById('auth-phone').value.trim();
       const rawName = document.getElementById('auth-name').value.trim();
@@ -1100,7 +1163,8 @@
       const name = rawName || `Member (${phone.slice(-4)})`;
       const btn = document.getElementById('btn-wa-login');
       btn.disabled = true;
-      btn.textContent = 'Memverifikasi...';
+      btn.textContent = 'Memverifikasi Data...';
+      startTopLoading();
 
       try {
         const res = await fetch('/api/auth/wa-login', {
@@ -1114,14 +1178,14 @@
           currentUser = data.user;
           localStorage.setItem('falstore_user', JSON.stringify(currentUser));
           updateUserAuthState();
-          closeAuthModal();
-          showToast(`Halo ${currentUser.name}, Anda berhasil masuk via WhatsApp!`);
+          showToast(`Halo ${currentUser.name}, Anda berhasil masuk!`);
 
-          // Direct WhatsApp click-to-chat if requested
           if (openDirectWhatsApp) {
-            const waMsg = encodeURIComponent(`Halo FalStore, saya ingin konfirmasi login akun ${currentUser.name} (${currentUser.phone}).`);
+            const waMsg = encodeURIComponent(`Halo FalStore, saya telah login akun member: ${currentUser.name} (${currentUser.phone}).`);
             window.open(`https://wa.me/6281234567890?text=${waMsg}`, '_blank');
           }
+
+          switchView('account');
         } else {
           alert('Gagal masuk: ' + (data.error || 'Terjadi kesalahan'));
         }
@@ -1129,17 +1193,18 @@
         alert('Kesalahan koneksi: ' + err.message);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = `<i data-lucide="message-circle" class="w-4 h-4"></i><span>Masuk & Buka WhatsApp (Direct)</span>`;
+        btn.innerHTML = `<i data-lucide="message-circle" class="w-4 h-4"></i><span>Masuk via WhatsApp (Direct)</span>`;
         lucide.createIcons();
+        finishTopLoading();
       }
     }
 
     function logoutUser() {
       currentUser = null;
       localStorage.removeItem('falstore_user');
-      document.getElementById('user-dropdown-box').classList.add('hidden');
       updateUserAuthState();
       showToast('Anda telah keluar dari akun.');
+      switchView('store');
     }
 
     function updateUserAuthState() {
@@ -1153,7 +1218,14 @@
         const initial = (currentUser.name || 'U').charAt(0).toUpperCase();
         document.getElementById('user-avatar-initial').textContent = initial;
         document.getElementById('user-display-name').textContent = currentUser.name || 'Member';
-        document.getElementById('user-display-phone').textContent = currentUser.phone;
+
+        // Account View fields
+        const accAvatar = document.getElementById('acc-avatar');
+        if (accAvatar) accAvatar.textContent = initial;
+        const accName = document.getElementById('acc-name');
+        if (accName) accName.textContent = currentUser.name;
+        const accPhone = document.getElementById('acc-phone');
+        if (accPhone) accPhone.textContent = '+' + currentUser.phone;
 
         // Auto-fill checkout fields
         if (document.getElementById('chk-name')) document.getElementById('chk-name').value = currentUser.name || '';
@@ -1165,13 +1237,10 @@
       }
     }
 
-    async function viewUserOrders() {
-      document.getElementById('user-dropdown-box').classList.add('hidden');
-      if (!currentUser) return openAuthModal();
-
-      const container = document.getElementById('user-orders-list');
+    async function fetchMemberOrders() {
+      if (!currentUser) return;
+      const container = document.getElementById('acc-orders-list');
       container.innerHTML = '<div class="p-8 text-center text-zinc-500 font-mono text-xs">Memuat pesanan Anda...</div>';
-      document.getElementById('modal-user-orders').classList.remove('hidden');
 
       try {
         const res = await fetch(`/api/orders/user/${encodeURIComponent(currentUser.phone)}`);
@@ -1180,27 +1249,62 @@
           container.innerHTML = '';
           data.orders.forEach(order => {
             const card = document.createElement('div');
-            card.className = 'p-4 bg-obsidian border hairline space-y-2';
+            card.className = 'bg-ink border hairline p-5 space-y-4';
+
+            let itemsHTML = '';
+            const items = typeof order.items === 'string' ? JSON.parse(order.items) : (order.items || []);
+            items.forEach(i => {
+              itemsHTML += `
+                <div class="flex items-center justify-between text-xs py-2 border-b hairline">
+                  <div class="flex items-center gap-3">
+                    <img src="${escapeHTML(i.image || 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600')}" class="w-10 h-12 object-cover bg-zinc-900 border hairline">
+                    <div>
+                      <div class="font-semibold text-white">${escapeHTML(i.name)}</div>
+                      <div class="text-[10px] text-zinc-500 font-mono">${formatRupiah(i.price)} &times; ${i.qty}</div>
+                    </div>
+                  </div>
+                  <div class="font-mono font-bold text-white">${formatRupiah(i.price * i.qty)}</div>
+                </div>
+              `;
+            });
+
             card.innerHTML = `
-              <div class="flex items-center justify-between text-xs">
-                <span class="font-mono text-white font-bold">${escapeHTML(order.id)}</span>
-                <span class="px-2 py-0.5 border hairline text-[10px] uppercase tracking-wider text-emerald-400 font-mono">${escapeHTML(order.status)}</span>
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b hairline pb-3">
+                <div class="flex items-center gap-3">
+                  <span class="font-mono text-white font-bold text-xs">${escapeHTML(order.id)}</span>
+                  <span class="text-zinc-500 text-xs">&bull;</span>
+                  <span class="text-xs text-zinc-400 font-mono">${new Date(order.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+                <span class="px-2.5 py-1 bg-obsidian border hairline text-[10px] uppercase tracking-wider text-emerald-400 font-mono font-bold self-start sm:self-auto">${escapeHTML(order.status)}</span>
               </div>
-              <div class="text-xs text-zinc-400">Total Tagihan: <b class="font-mono text-white">${formatRupiah(order.total_amount)}</b></div>
-              <div class="text-[11px] text-zinc-500 font-mono">Kurir: ${escapeHTML(order.courier.toUpperCase())} &bull; ${new Date(order.created_at).toLocaleDateString('id-ID')}</div>
+
+              <div class="space-y-1">${itemsHTML}</div>
+
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+                <div class="text-xs text-zinc-400 font-mono">
+                  Ekspedisi: <b class="text-white uppercase">${escapeHTML(order.courier)}</b> &bull; Pembayaran: <b class="text-white uppercase">${escapeHTML(order.payment_method)}</b>
+                </div>
+                <div class="flex items-baseline gap-2 sm:justify-end">
+                  <span class="text-xs text-zinc-400">Total Tagihan:</span>
+                  <span class="text-base font-extrabold font-mono text-white">${formatRupiah(order.total_amount)}</span>
+                </div>
+              </div>
             `;
             container.appendChild(card);
           });
         } else {
-          container.innerHTML = '<div class="p-8 text-center text-zinc-500 text-xs">Belum ada riwayat pesanan dengan nomor WhatsApp ini.</div>';
+          container.innerHTML = `
+            <div class="p-12 text-center text-zinc-500 bg-ink border hairline space-y-3">
+              <i data-lucide="package-open" class="w-8 h-8 mx-auto text-zinc-600"></i>
+              <p class="text-xs uppercase tracking-wider font-mono">Belum ada riwayat pesanan.</p>
+              <button type="button" onclick="switchView('store')" class="px-4 py-2 bg-white text-obsidian text-[10px] font-extrabold uppercase tracking-wider">Mulai Berbelanja</button>
+            </div>
+          `;
+          lucide.createIcons();
         }
       } catch (err) {
-        container.innerHTML = `<div class="p-8 text-center text-rose-400 text-xs">Gagal mengambil pesanan: ${err.message}</div>`;
+        container.innerHTML = `<div class="p-8 text-center text-rose-400 text-xs">Gagal memuat pesanan: ${err.message}</div>`;
       }
-    }
-
-    function closeUserOrdersModal() {
-      document.getElementById('modal-user-orders').classList.add('hidden');
     }
 
     // 2. Products Catalog Logic
@@ -1732,10 +1836,10 @@
       startTopLoading();
 
       setTimeout(() => {
-        document.getElementById('view-store').classList.add('hidden');
-        document.getElementById('view-cart').classList.add('hidden');
-        document.getElementById('view-checkout').classList.add('hidden');
-        document.getElementById('view-admin').classList.add('hidden');
+        ['view-store', 'view-cart', 'view-checkout', 'view-auth', 'view-account', 'view-admin'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.classList.add('hidden');
+        });
 
         if (view === 'cart') {
           document.getElementById('view-cart').classList.remove('hidden');
@@ -1743,6 +1847,20 @@
         } else if (view === 'checkout') {
           document.getElementById('view-checkout').classList.remove('hidden');
           renderShopeeCheckoutItems();
+        } else if (view === 'auth') {
+          if (currentUser) {
+            document.getElementById('view-account').classList.remove('hidden');
+            fetchMemberOrders();
+          } else {
+            document.getElementById('view-auth').classList.remove('hidden');
+          }
+        } else if (view === 'account') {
+          if (!currentUser) {
+            document.getElementById('view-auth').classList.remove('hidden');
+          } else {
+            document.getElementById('view-account').classList.remove('hidden');
+            fetchMemberOrders();
+          }
         } else if (view === 'admin') {
           document.getElementById('view-admin').classList.remove('hidden');
           document.getElementById('admin-toggle-text').textContent = 'Etalase Toko';
@@ -1759,7 +1877,7 @@
         setTimeout(() => {
           if (spinner) spinner.classList.remove('is-active');
           finishTopLoading();
-        }, 90);
+        }, 80);
       }, 40);
     }
 
@@ -1768,7 +1886,7 @@
       switchView(isCurrentlyAdmin ? 'store' : 'admin');
     }
 
-    // Track Order
+    // Track Order Modal
     function openTrackModal() { document.getElementById('track-modal').classList.remove('hidden'); }
     function closeTrackModal() { document.getElementById('track-modal').classList.add('hidden'); }
 
@@ -1920,11 +2038,10 @@
 
     document.addEventListener('keydown', event => {
       if (event.key !== 'Escape') return;
-      ['modal-auth', 'modal-user-orders', 'modal-product-detail', 'modal-promo', 'track-modal', 'add-product-modal', 'invoice-modal'].forEach(id => {
+      ['modal-product-detail', 'modal-promo', 'track-modal', 'add-product-modal', 'invoice-modal'].forEach(id => {
         const el = document.getElementById(id);
         if (el && !el.classList.contains('hidden')) el.classList.add('hidden');
       });
-      document.getElementById('user-dropdown-box').classList.add('hidden');
     });
 
     window.addEventListener('DOMContentLoaded', () => {
