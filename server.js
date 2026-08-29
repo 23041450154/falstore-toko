@@ -12,10 +12,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // PostgreSQL Connection Pool
 const pool = new Pool({
-  user: process.env.DB_USER || 'falstore',
+  user: process.env.DB_USER || 'postgres',
   host: process.env.DB_HOST || '127.0.0.1',
   database: process.env.DB_NAME || 'falstore_db',
-  password: process.env.DB_PASSWORD || 'falstore_secret_2026',
+  password: process.env.DB_PASSWORD || 'naufal_secure_db_pass_2026',
   port: process.env.DB_PORT || 5432,
 });
 
@@ -78,14 +78,14 @@ app.post('/api/auth/wa-login', async (req, res) => {
     if (phone.startsWith('0')) phone = '62' + phone.substring(1);
     if (!phone.startsWith('62')) phone = '62' + phone;
 
-    if (!name) name = 'Pelanggan FalStore (' + phone.slice(-4) + ')';
+    if (!name) name = 'Member FalStore (' + phone.slice(-4) + ')';
 
     const userRes = await pool.query(
       `INSERT INTO users (phone, name, address)
        VALUES ($1, $2, $3)
        ON CONFLICT (phone) DO UPDATE 
-       SET name = COALESCE(EXCLUDED.name, users.name),
-           address = COALESCE(EXCLUDED.address, users.address)
+       SET name = COALESCE(NULLIF(EXCLUDED.name, ''), users.name),
+           address = COALESCE(NULLIF(EXCLUDED.address, ''), users.address)
        RETURNING *;`,
       [phone, name, address || '']
     );
