@@ -121,7 +121,7 @@
     </span>
   </aside>
 
-  <!-- Navigation Header -->
+  <!-- Navigation Header (PUBLIC - NO ADMIN BUTTON) -->
   <header class="sticky top-0 z-40 nav-shell border-b hairline">
     <div class="max-w-[1440px] mx-auto px-4 sm:px-8 h-20 flex items-center justify-between gap-4">
       
@@ -134,10 +134,6 @@
         <nav class="hidden md:flex items-center gap-6 text-[10px] uppercase tracking-[0.18em] text-zinc-400" aria-label="Navigasi Utama">
           <button type="button" onclick="switchView('store')" class="hover:text-white transition-colors">Katalog</button>
           <a href="#layanan" class="hover:text-white transition-colors">Jaminan</a>
-          <button type="button" onclick="switchView('admin')" class="hover:text-white transition-colors flex items-center gap-1.5">
-            <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-zinc-400"></i>
-            <span>Dashboard</span>
-          </button>
         </nav>
       </div>
 
@@ -165,12 +161,6 @@
         <button type="button" onclick="openTrackModal()" class="h-10 px-3.5 border hairline hover:border-zinc-500 text-[10px] uppercase tracking-[0.15em] font-medium inline-flex items-center gap-2 transition-colors">
           <i data-lucide="compass" class="w-3.5 h-3.5 text-zinc-400"></i>
           <span class="hidden sm:inline">Lacak</span>
-        </button>
-
-        <!-- Dashboard Toko Button -->
-        <button type="button" onclick="toggleAdminView()" id="btn-admin-toggle" class="h-10 px-3.5 border hairline hover:border-zinc-500 text-[10px] uppercase tracking-[0.15em] font-medium inline-flex items-center gap-2 transition-colors">
-          <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-zinc-400"></i>
-          <span id="admin-toggle-text" class="hidden sm:inline">Dashboard</span>
         </button>
 
         <!-- Keranjang Belanja Button -->
@@ -405,7 +395,7 @@
             </div>
             <div>
               <label class="block text-[10px] uppercase tracking-wider text-zinc-400 mb-1">Nomor WhatsApp / HP</label>
-              <input type="tel" id="chk-phone" value="081234567890" class="w-full bg-obsidian border hairline px-3.5 py-2.5 text-xs text-white font-mono focus:outline-none">
+              <input type="tel" id="chk-phone" value="085182555842" class="w-full bg-obsidian border hairline px-3.5 py-2.5 text-xs text-white font-mono focus:outline-none">
             </div>
           </div>
           <div>
@@ -682,7 +672,7 @@
             <h2 class="text-lg font-bold text-white" id="acc-name">Naufal Muhammad</h2>
             <span class="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[9px] font-mono uppercase tracking-wider font-semibold" id="acc-provider-badge">Terverifikasi</span>
           </div>
-          <p class="text-xs text-zinc-400 font-mono" id="acc-phone">+62 812-3456-7890</p>
+          <p class="text-xs text-zinc-400 font-mono" id="acc-phone">+62 851-8255-5842</p>
         </div>
       </div>
 
@@ -712,64 +702,95 @@
     </div>
   </main>
 
-  <!-- 6. ADMIN DASHBOARD VIEW -->
+  <!-- 6. DEDICATED ADMIN DASHBOARD VIEW (/admin EXCLUSIVE) -->
   <main id="view-admin" class="hidden max-w-[1440px] mx-auto px-4 sm:px-8 py-10 w-full flex-1 anim-fade-in">
-    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b hairline pb-8">
+    
+    <!-- Admin PIN Security Gate -->
+    <div id="admin-auth-gate" class="max-w-md mx-auto my-12 bg-ink border hairline p-8 space-y-6 text-center">
+      <div class="w-12 h-12 rounded-full bg-obsidian border hairline flex items-center justify-center mx-auto text-zinc-400">
+        <i data-lucide="shield-alert" class="w-6 h-6 text-white"></i>
+      </div>
       <div>
-        <span class="eyebrow">Dashboard Pengelola Toko</span>
-        <h2 class="mt-2 text-3xl font-bold text-white">Ringkasan & Manajemen Toko</h2>
-        <p class="mt-1 text-xs text-zinc-500">Tersinkronisasi langsung dengan basis data PostgreSQL di VPS UpCloud.</p>
+        <span class="eyebrow text-emerald-400">Akses Terproteksi</span>
+        <h2 class="text-2xl font-bold text-white mt-1">Panel Pengelola Toko</h2>
+        <p class="text-xs text-zinc-400 mt-1">Masukkan PIN Otorisasi Admin untuk mengelola pesanan & produk.</p>
       </div>
-      <div class="flex items-center gap-3">
-        <button type="button" onclick="switchView('store')" class="h-11 px-4 border hairline text-zinc-300 hover:text-white font-bold text-[10px] uppercase tracking-[0.16em] inline-flex items-center gap-2">
-          <i data-lucide="store" class="w-3.5 h-3.5"></i>
-          <span>Ke Etalase Toko</span>
+      <form onsubmit="verifyAdminPin(event)" class="space-y-4">
+        <input type="password" id="admin-pin-input" placeholder="Masukkan PIN Admin (Default: 2026)" class="w-full bg-obsidian border hairline px-4 py-3 text-center text-sm text-white font-mono tracking-widest focus:outline-none">
+        <button type="submit" id="btn-admin-login" class="w-full h-11 bg-white text-obsidian hover:bg-zinc-200 font-extrabold text-[10px] uppercase tracking-[0.18em] transition-colors">
+          Buka Panel Admin
         </button>
-        <button type="button" onclick="openAddProductModal()" class="h-11 px-5 bg-white text-obsidian font-bold text-[10px] uppercase tracking-[0.16em] inline-flex items-center gap-2 hover:bg-zinc-200 transition-colors">
-          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-          <span>Tambah Produk Baru</span>
-        </button>
+      </form>
+      <div class="border-t hairline pt-4">
+        <button type="button" onclick="switchView('store')" class="text-xs text-zinc-500 hover:text-white uppercase tracking-wider">Kembali ke Etalase Toko</button>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 border-b hairline">
-      <div class="p-6 border-b sm:border-b-0 sm:border-r hairline">
-        <span class="eyebrow">Total Omset Penjualan</span>
-        <div class="mt-3 text-3xl font-semibold text-white font-mono" id="adm-revenue">Rp 0</div>
+    <!-- Admin Control Center (Shown when Authenticated) -->
+    <div id="admin-panel-content" class="hidden space-y-10">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b hairline pb-8">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="eyebrow text-emerald-400">Mode Otorisasi Aktif</span>
+            <span class="text-zinc-600">&bull;</span>
+            <span class="text-[10px] font-mono text-zinc-400">https://toko.naufal.me/admin</span>
+          </div>
+          <h2 class="mt-2 text-3xl font-bold text-white">Ringkasan & Manajemen Toko</h2>
+          <p class="mt-1 text-xs text-zinc-500">Tersinkronisasi langsung dengan PostgreSQL VPS UpCloud.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="switchView('store')" class="h-11 px-4 border hairline text-zinc-300 hover:text-white font-bold text-[10px] uppercase tracking-[0.16em] inline-flex items-center gap-2">
+            <i data-lucide="store" class="w-3.5 h-3.5"></i>
+            <span>Ke Etalase Toko</span>
+          </button>
+          <button type="button" onclick="openAddProductModal()" class="h-11 px-5 bg-white text-obsidian font-bold text-[10px] uppercase tracking-[0.16em] inline-flex items-center gap-2 hover:bg-zinc-200 transition-colors">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>Tambah Produk Baru</span>
+          </button>
+        </div>
       </div>
-      <div class="p-6 border-b sm:border-b-0 sm:border-r hairline">
-        <span class="eyebrow">Total Pesanan Masuk</span>
-        <div class="mt-3 text-3xl font-semibold text-white font-mono" id="adm-orders-count">0</div>
-      </div>
-      <div class="p-6">
-        <span class="eyebrow">Jumlah Produk Aktif</span>
-        <div class="mt-3 text-3xl font-semibold text-white font-mono" id="adm-products-count">0</div>
-      </div>
-    </div>
 
-    <div class="mt-10">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-base font-semibold text-white">Daftar Transaksi Masuk</h3>
-        <button type="button" onclick="fetchAdminData()" class="text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 font-mono">
-          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Muat Ulang Data
-        </button>
+      <!-- Admin Metric Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 border-b hairline">
+        <div class="p-6 border-b sm:border-b-0 sm:border-r hairline">
+          <span class="eyebrow">Total Omset Penjualan</span>
+          <div class="mt-3 text-3xl font-semibold text-white font-mono" id="adm-revenue">Rp 0</div>
+        </div>
+        <div class="p-6 border-b sm:border-b-0 sm:border-r hairline">
+          <span class="eyebrow">Total Pesanan Masuk</span>
+          <div class="mt-3 text-3xl font-semibold text-white font-mono" id="adm-orders-count">0</div>
+        </div>
+        <div class="p-6">
+          <span class="eyebrow">Jumlah Produk Aktif</span>
+          <div class="mt-3 text-3xl font-semibold text-white font-mono" id="adm-products-count">0</div>
+        </div>
       </div>
-      <div class="overflow-x-auto border hairline bg-ink">
-        <table class="w-full text-xs text-left text-zinc-300">
-          <thead class="bg-obsidian border-b hairline text-[9px] uppercase tracking-[0.18em] text-zinc-500">
-            <tr>
-              <th class="px-5 py-4 font-medium">No. Invoice</th>
-              <th class="px-5 py-4 font-medium">Nama Pembeli</th>
-              <th class="px-5 py-4 font-medium">Kurir & Pembayaran</th>
-              <th class="px-5 py-4 font-medium">Total Tagihan</th>
-              <th class="px-5 py-4 font-medium">Status</th>
-              <th class="px-5 py-4 font-medium text-right">Tindakan</th>
-            </tr>
-          </thead>
-          <tbody id="adm-orders-tbody" class="divide-y hairline">
-            <tr><td colspan="6" class="p-10 text-center text-zinc-600">Memuat data transaksi...</td></tr>
-          </tbody>
-        </table>
+
+      <!-- Orders Table -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-semibold text-white">Daftar Transaksi Masuk</h3>
+          <button type="button" onclick="fetchAdminData()" class="text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 font-mono">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Muat Ulang Data
+          </button>
+        </div>
+        <div class="overflow-x-auto border hairline bg-ink">
+          <table class="w-full text-xs text-left text-zinc-300">
+            <thead class="bg-obsidian border-b hairline text-[9px] uppercase tracking-[0.18em] text-zinc-500">
+              <tr>
+                <th class="px-5 py-4 font-medium">No. Invoice</th>
+                <th class="px-5 py-4 font-medium">Nama Pembeli</th>
+                <th class="px-5 py-4 font-medium">Kurir & Pembayaran</th>
+                <th class="px-5 py-4 font-medium">Total Tagihan</th>
+                <th class="px-5 py-4 font-medium">Status</th>
+                <th class="px-5 py-4 font-medium text-right">Tindakan</th>
+              </tr>
+            </thead>
+            <tbody id="adm-orders-tbody" class="divide-y hairline">
+              <tr><td colspan="6" class="p-10 text-center text-zinc-600">Memuat data transaksi...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </main>
@@ -1004,7 +1025,7 @@
     <span id="toast-msg">Pemberitahuan</span>
   </div>
 
-  <!-- Footer -->
+  <!-- Footer (PUBLIC - NO ADMIN BUTTON) -->
   <footer class="border-t hairline bg-ink mt-auto py-10 text-xs text-zinc-500">
     <div class="max-w-[1440px] mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
       <div>
@@ -1013,7 +1034,7 @@
       </div>
       <div class="flex gap-6 text-[10px] uppercase tracking-[0.18em]">
         <button type="button" onclick="switchView('store')" class="hover:text-white transition-colors">Katalog</button>
-        <button type="button" onclick="switchView('admin')" class="hover:text-white transition-colors">Dashboard</button>
+        <a href="#layanan" class="hover:text-white transition-colors">Jaminan</a>
         <a href="https://github.com/23041450154/falstore-toko" target="_blank" class="hover:text-white transition-colors">GitHub</a>
       </div>
     </div>
@@ -1024,13 +1045,16 @@
     let products = [];
     let cart = JSON.parse(localStorage.getItem('falstore_cart') || '[]');
     let currentUser = JSON.parse(localStorage.getItem('falstore_user') || 'null');
+    let isAdminAuth = sessionStorage.getItem('falstore_admin_auth') === 'true';
     let currentCategory = 'all';
     let searchQuery = '';
     let discountPercent = 0;
     let selectedDetailProduct = null;
     let detailQty = 1;
 
-    // Loading Bar Controller (Single, Non-flickering)
+    const ADMIN_WA_NUMBER = '6285182555842';
+
+    // Loading Bar Controller
     function startTopLoading() {
       const bar = document.getElementById('top-loading-bar');
       if (!bar) return;
@@ -1086,16 +1110,14 @@
       }[match]));
     }
 
-    const ADMIN_WA_NUMBER = '6285182555842';
-
-    // 1. Social 1-Click OAuth (Google, WhatsApp, Telegram — Zero Manual Typing)
+    // 1. Social 1-Click OAuth
     async function loginWithProvider(provider) {
       startTopLoading();
 
       let payload = {
         provider: provider,
         name: 'Naufal Muhammad',
-        phone: '6285182555842',
+        phone: ADMIN_WA_NUMBER,
         email: 'naufal@gmail.com',
         avatar: 'N',
         provider_id: provider + '_usr_2026'
@@ -1106,7 +1128,7 @@
         payload.email = 'naufal.dev@gmail.com';
       } else if (provider === 'whatsapp') {
         payload.name = 'Naufal Muhammad (WhatsApp)';
-        payload.phone = '6285182555842';
+        payload.phone = ADMIN_WA_NUMBER;
       } else if (provider === 'telegram') {
         payload.name = 'Naufal Muhammad (@naufal)';
         payload.email = 'naufal@t.me';
@@ -1174,7 +1196,7 @@
         if (accPhone) accPhone.textContent = currentUser.phone ? ('+' + currentUser.phone) : (currentUser.email || '@naufal');
 
         if (document.getElementById('chk-name')) document.getElementById('chk-name').value = currentUser.name || '';
-        if (document.getElementById('chk-phone')) document.getElementById('chk-phone').value = currentUser.phone || '081234567890';
+        if (document.getElementById('chk-phone')) document.getElementById('chk-phone').value = currentUser.phone || '085182555842';
         if (document.getElementById('chk-address') && currentUser.address) document.getElementById('chk-address').value = currentUser.address;
       } else {
         if (loginTrigger) loginTrigger.classList.remove('hidden');
@@ -1465,7 +1487,7 @@
       switchView('cart');
     }
 
-    // Cart Management & Page Renderer (Shopee Full Page)
+    // Cart Management & Page Renderer
     function addToCart(productId, showNotification = true) {
       const prod = products.find(p => p.id === productId);
       if (!prod) return;
@@ -1781,8 +1803,8 @@
       document.getElementById('invoice-modal').classList.add('hidden');
     }
 
-    // View Switcher (Instant & Non-Blocking)
-    function switchView(view) {
+    // View Switcher with URL Management
+    function switchView(view, pushUrl = true) {
       ['view-store', 'view-cart', 'view-checkout', 'view-auth', 'view-account', 'view-admin'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
@@ -1791,30 +1813,36 @@
       if (view === 'cart') {
         document.getElementById('view-cart').classList.remove('hidden');
         renderCartPage();
+        if (pushUrl) history.pushState({ view: 'cart' }, '', '/cart');
       } else if (view === 'checkout') {
         document.getElementById('view-checkout').classList.remove('hidden');
         renderShopeeCheckoutItems();
+        if (pushUrl) history.pushState({ view: 'checkout' }, '', '/checkout');
       } else if (view === 'auth') {
         if (currentUser) {
           document.getElementById('view-account').classList.remove('hidden');
           fetchMemberOrders();
+          if (pushUrl) history.pushState({ view: 'account' }, '', '/account');
         } else {
           document.getElementById('view-auth').classList.remove('hidden');
+          if (pushUrl) history.pushState({ view: 'auth' }, '', '/auth');
         }
       } else if (view === 'account') {
         if (!currentUser) {
           document.getElementById('view-auth').classList.remove('hidden');
+          if (pushUrl) history.pushState({ view: 'auth' }, '', '/auth');
         } else {
           document.getElementById('view-account').classList.remove('hidden');
           fetchMemberOrders();
+          if (pushUrl) history.pushState({ view: 'account' }, '', '/account');
         }
       } else if (view === 'admin') {
         document.getElementById('view-admin').classList.remove('hidden');
-        document.getElementById('admin-toggle-text').textContent = 'Etalase Toko';
-        fetchAdminData();
+        if (pushUrl) history.pushState({ view: 'admin' }, '', '/admin');
+        renderAdminGate();
       } else {
         document.getElementById('view-store').classList.remove('hidden');
-        document.getElementById('admin-toggle-text').textContent = 'Dashboard';
+        if (pushUrl) history.pushState({ view: 'store' }, '', '/');
         if (products.length === 0) fetchProducts(true);
       }
 
@@ -1822,9 +1850,43 @@
       lucide.createIcons();
     }
 
-    function toggleAdminView() {
-      const isCurrentlyAdmin = !document.getElementById('view-admin').classList.contains('hidden');
-      switchView(isCurrentlyAdmin ? 'store' : 'admin');
+    // Admin PIN Gate Logic
+    function renderAdminGate() {
+      const gate = document.getElementById('admin-auth-gate');
+      const content = document.getElementById('admin-panel-content');
+      if (isAdminAuth) {
+        gate.classList.add('hidden');
+        content.classList.remove('hidden');
+        fetchAdminData();
+      } else {
+        gate.classList.remove('hidden');
+        content.classList.add('hidden');
+      }
+    }
+
+    async function verifyAdminPin(e) {
+      if (e) e.preventDefault();
+      const pin = document.getElementById('admin-pin-input').value.trim();
+      if (!pin) return alert('Masukkan PIN Admin.');
+
+      try {
+        const res = await fetch('/api/admin/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pin })
+        });
+        const data = await res.json();
+        if (data.success) {
+          isAdminAuth = true;
+          sessionStorage.setItem('falstore_admin_auth', 'true');
+          showToast('Akses Admin Terverifikasi');
+          renderAdminGate();
+        } else {
+          alert('PIN Admin salah. Coba: 2026 atau admin123');
+        }
+      } catch (err) {
+        alert('Gagal verifikasi admin: ' + err.message);
+      }
     }
 
     // Track Order Modal
@@ -1977,6 +2039,26 @@
       }, 2800);
     }
 
+    // Handle Browser Back / Forward & Initial URL
+    function handleInitialRoute() {
+      const path = window.location.pathname;
+      if (path === '/admin' || window.location.hash === '#/admin') {
+        switchView('admin', false);
+      } else if (path === '/cart') {
+        switchView('cart', false);
+      } else if (path === '/checkout') {
+        switchView('checkout', false);
+      } else if (path === '/auth') {
+        switchView('auth', false);
+      } else if (path === '/account') {
+        switchView('account', false);
+      } else {
+        switchView('store', false);
+      }
+    }
+
+    window.addEventListener('popstate', handleInitialRoute);
+
     document.addEventListener('keydown', event => {
       if (event.key !== 'Escape') return;
       ['modal-product-detail', 'modal-promo', 'track-modal', 'add-product-modal', 'invoice-modal'].forEach(id => {
@@ -1988,7 +2070,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
       updateUserAuthState();
-      fetchProducts(true);
+      handleInitialRoute();
       updateCartState();
     });
   </script>
