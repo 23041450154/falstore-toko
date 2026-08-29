@@ -99,7 +99,7 @@ app.post('/api/auth/social-login', async (req, res) => {
         `INSERT INTO users (provider, provider_id, name, phone, email, avatar, address)
          VALUES ($1, $2, $3, $4, $5, $6, 'Jl. Jenderal Sudirman No. 45, Palembang')
          RETURNING *;`,
-        [provider, provider_id || finalEmail || finalPhone || ('ID-' + Date.now()), finalName, finalPhone || '6281234567890', finalEmail || 'member@naufal.me', finalAvatar]
+        [provider, provider_id || finalEmail || finalPhone || ('ID-' + Date.now()), finalName, finalPhone || '6285182555842', finalEmail || 'member@naufal.me', finalAvatar]
       );
     }
 

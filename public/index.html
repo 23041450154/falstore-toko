@@ -1086,6 +1086,8 @@
       }[match]));
     }
 
+    const ADMIN_WA_NUMBER = '6285182555842';
+
     // 1. Social 1-Click OAuth (Google, WhatsApp, Telegram — Zero Manual Typing)
     async function loginWithProvider(provider) {
       startTopLoading();
@@ -1093,7 +1095,7 @@
       let payload = {
         provider: provider,
         name: 'Naufal Muhammad',
-        phone: '6281234567890',
+        phone: '6285182555842',
         email: 'naufal@gmail.com',
         avatar: 'N',
         provider_id: provider + '_usr_2026'
@@ -1104,7 +1106,7 @@
         payload.email = 'naufal.dev@gmail.com';
       } else if (provider === 'whatsapp') {
         payload.name = 'Naufal Muhammad (WhatsApp)';
-        payload.phone = '6281234567890';
+        payload.phone = '6285182555842';
       } else if (provider === 'telegram') {
         payload.name = 'Naufal Muhammad (@naufal)';
         payload.email = 'naufal@t.me';
@@ -1126,7 +1128,7 @@
 
           if (provider === 'whatsapp') {
             const waMsg = encodeURIComponent(`Halo Admin FalStore, saya telah login via WhatsApp.`);
-            window.open(`https://wa.me/6281234567890?text=${waMsg}`, '_blank');
+            window.open(`https://wa.me/${ADMIN_WA_NUMBER}?text=${waMsg}`, '_blank');
           }
 
           switchView('account');
