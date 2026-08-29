@@ -247,8 +247,15 @@ app.get('/api/stats', async (req, res) => {
 });
 
 // 7. Direct Routes Fallback (SPA Support for /admin, /cart, /checkout, /auth, /account)
-app.get(['/admin', '/cart', '/checkout', '/auth', '/account', '*'], (req, res) => {
+app.get(['/admin', '/cart', '/checkout', '/auth', '/account'], (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.use((req, res, next) => {
+  if (req.method === 'GET' && !req.path.startsWith('/api')) {
+    return res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  }
+  next();
 });
 
 app.listen(PORT, '0.0.0.0', () => {
