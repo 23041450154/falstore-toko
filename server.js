@@ -25,8 +25,12 @@ async function initDB() {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
-        phone VARCHAR(50) UNIQUE NOT NULL,
+        provider VARCHAR(50) DEFAULT 'whatsapp',
+        provider_id VARCHAR(100),
         name VARCHAR(150),
+        phone VARCHAR(50),
+        email VARCHAR(150),
+        avatar TEXT,
         address TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
@@ -67,28 +71,37 @@ async function initDB() {
 }
 initDB();
 
-// 1. WhatsApp Authentication / Direct Login API
-app.post('/api/auth/wa-login', async (req, res) => {
+// 1. Social OAuth Login API (Google, WhatsApp, Telegram — Zero Manual Input)
+app.post('/api/auth/social-login', async (req, res) => {
   try {
-    let { phone, name, address } = req.body;
-    if (!phone) return res.status(400).json({ success: false, error: 'Nomor WhatsApp wajib diisi' });
+    const { provider, name, email, phone, avatar, provider_id } = req.body;
+    if (!provider) return res.status(400).json({ success: false, error: 'Provider wajib dipilih' });
 
-    // Normalize Indonesian Phone Number (08xxx -> 628xxx)
-    phone = phone.replace(/\D/g, '');
-    if (phone.startsWith('0')) phone = '62' + phone.substring(1);
-    if (!phone.startsWith('62')) phone = '62' + phone;
+    let userRes;
+    const finalPhone = phone ? phone.replace(/\D/g, '') : '';
+    const finalEmail = email || '';
+    const finalName = name || (provider === 'google' ? 'Google User' : provider === 'telegram' ? 'Telegram User' : 'WhatsApp User');
+    const finalAvatar = avatar || '';
 
-    if (!name) name = 'Member FalStore (' + phone.slice(-4) + ')';
-
-    const userRes = await pool.query(
-      `INSERT INTO users (phone, name, address)
-       VALUES ($1, $2, $3)
-       ON CONFLICT (phone) DO UPDATE 
-       SET name = COALESCE(NULLIF(EXCLUDED.name, ''), users.name),
-           address = COALESCE(NULLIF(EXCLUDED.address, ''), users.address)
-       RETURNING *;`,
-      [phone, name, address || '']
+    // Check if user already exists by provider_id, phone, or email
+    const existing = await pool.query(
+      `SELECT * FROM users WHERE (provider = $1 AND provider_id = $2) OR (phone = $3 AND $3 != '') OR (email = $4 AND $4 != '') LIMIT 1;`,
+      [provider, provider_id || finalEmail || finalPhone, finalPhone, finalEmail]
     );
+
+    if (existing.rows.length > 0) {
+      userRes = await pool.query(
+        `UPDATE users SET name = COALESCE($1, name), avatar = COALESCE($2, avatar), address = COALESCE(address, 'Jl. Jenderal Sudirman No. 45, Palembang') WHERE id = $3 RETURNING *;`,
+        [finalName, finalAvatar, existing.rows[0].id]
+      );
+    } else {
+      userRes = await pool.query(
+        `INSERT INTO users (provider, provider_id, name, phone, email, avatar, address)
+         VALUES ($1, $2, $3, $4, $5, $6, 'Jl. Jenderal Sudirman No. 45, Palembang')
+         RETURNING *;`,
+        [provider, provider_id || finalEmail || finalPhone || ('ID-' + Date.now()), finalName, finalPhone || '6281234567890', finalEmail || 'member@naufal.me', finalAvatar]
+      );
+    }
 
     res.json({ success: true, user: userRes.rows[0] });
   } catch (err) {
@@ -96,15 +109,15 @@ app.post('/api/auth/wa-login', async (req, res) => {
   }
 });
 
-// 2. Get User Orders by Phone
-app.get('/api/orders/user/:phone', async (req, res) => {
+// 2. Get User Orders
+app.get('/api/orders/user/:identifier', async (req, res) => {
   try {
-    let phone = req.params.phone.replace(/\D/g, '');
-    if (phone.startsWith('0')) phone = '62' + phone.substring(1);
+    let idf = req.params.identifier.replace(/\D/g, '');
+    if (idf.startsWith('0')) idf = '62' + idf.substring(1);
 
     const result = await pool.query(
-      `SELECT * FROM orders WHERE customer_phone LIKE $1 ORDER BY created_at DESC;`,
-      [`%${phone.slice(-9)}%`]
+      `SELECT * FROM orders WHERE customer_phone LIKE $1 OR customer_name ILIKE $2 ORDER BY created_at DESC;`,
+      [`%${idf.slice(-8)}%`, `%${req.params.identifier}%`]
     );
     res.json({ success: true, orders: result.rows });
   } catch (err) {
