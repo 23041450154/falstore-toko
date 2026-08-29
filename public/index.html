@@ -76,20 +76,63 @@
     
     /* Animations */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeOut { from { opacity: 1; visibility: visible; } to { opacity: 0; visibility: hidden; } }
     @keyframes scaleUp { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     @keyframes bounceBadge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
     @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(255, 255, 255, 0.05); } 50% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.15); } }
+    @keyframes topBarProgress { 0% { width: 0%; opacity: 1; } 50% { width: 70%; } 100% { width: 100%; opacity: 0; } }
 
     .anim-fade-in { animation: fadeIn 0.3s ease-out forwards; }
     .anim-scale-up { animation: scaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     .badge-bounce { animation: bounceBadge 0.3s ease-in-out; }
     .glow-card { animation: pulseGlow 4s infinite; }
 
-    .skeleton { background: linear-gradient(90deg, #151518 25%, #202025 50%, #151518 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+    /* Top Page Transition Progress Bar */
+    #top-loading-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2.5px;
+      width: 0%;
+      background: #ffffff;
+      z-index: 9999;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+      transition: width 0.3s ease, opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    /* Skeleton Loading Animation */
+    .skeleton { 
+      background: linear-gradient(90deg, #121215 25%, #1f1f25 50%, #121215 75%); 
+      background-size: 200% 100%; 
+      animation: shimmer 1.4s infinite; 
+    }
     @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* Preloader Spinner */
+    .preloader-spin {
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
+
+  <!-- Top Global Page Loading Bar -->
+  <div id="top-loading-bar"></div>
+
+  <!-- Initial Brand Preloader (Animasi Splash Screen) -->
+  <div id="page-preloader" class="fixed inset-0 z-[100] bg-obsidian flex flex-col items-center justify-center space-y-4 transition-opacity duration-500">
+    <div class="flex items-baseline gap-2">
+      <span class="text-2xl font-extrabold tracking-tight text-white">FalStore</span>
+      <span class="font-editorial italic text-zinc-500 text-xl">&eacute;tude</span>
+    </div>
+    <div class="w-7 h-7 preloader-spin"></div>
+    <span class="text-[9px] uppercase tracking-[0.25em] text-zinc-500 font-mono">Memuat Koleksi...</span>
+  </div>
 
   <!-- Promo Top Bar -->
   <aside onclick="openPromoModal()" class="cursor-pointer border-b hairline bg-ink text-zinc-400 py-2 px-4 text-center text-[10px] uppercase tracking-[0.2em] font-medium flex items-center justify-center gap-3 hover:text-white transition-colors">
@@ -226,12 +269,12 @@
         </div>
       </div>
 
-      <!-- Product Grid -->
+      <!-- Product Grid with Loading Skeletons -->
       <div id="product-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-10 sm:gap-y-14">
-        <div class="space-y-3"><div class="skeleton aspect-[4/5]"></div><div class="skeleton h-3 w-4/5"></div><div class="skeleton h-3 w-2/5"></div></div>
-        <div class="space-y-3"><div class="skeleton aspect-[4/5]"></div><div class="skeleton h-3 w-3/4"></div><div class="skeleton h-3 w-1/2"></div></div>
-        <div class="space-y-3"><div class="skeleton aspect-[4/5]"></div><div class="skeleton h-3 w-4/5"></div><div class="skeleton h-3 w-2/5"></div></div>
-        <div class="space-y-3"><div class="skeleton aspect-[4/5]"></div><div class="skeleton h-3 w-3/4"></div><div class="skeleton h-3 w-1/2"></div></div>
+        <div class="space-y-3"><div class="skeleton aspect-[4/5] border hairline"></div><div class="skeleton h-3 w-4/5"></div><div class="skeleton h-3 w-2/5"></div></div>
+        <div class="space-y-3"><div class="skeleton aspect-[4/5] border hairline"></div><div class="skeleton h-3 w-3/4"></div><div class="skeleton h-3 w-1/2"></div></div>
+        <div class="space-y-3"><div class="skeleton aspect-[4/5] border hairline"></div><div class="skeleton h-3 w-4/5"></div><div class="skeleton h-3 w-2/5"></div></div>
+        <div class="space-y-3"><div class="skeleton aspect-[4/5] border hairline"></div><div class="skeleton h-3 w-3/4"></div><div class="skeleton h-3 w-1/2"></div></div>
       </div>
     </section>
 
@@ -257,7 +300,7 @@
     </section>
   </main>
 
-  <!-- 2. FULL-PAGE SHOPEE-STYLE CART VIEW (HALAMAN KERANJANG PENUH) -->
+  <!-- 2. FULL-PAGE SHOPEE-STYLE CART VIEW -->
   <main id="view-cart" class="hidden max-w-[1240px] mx-auto px-4 sm:px-8 py-8 sm:py-12 w-full flex-1 space-y-8 anim-fade-in">
     
     <!-- Cart Header Bar -->
@@ -280,7 +323,7 @@
     </div>
 
     <!-- Empty Cart State Container -->
-    <div id="cart-empty-view" class="hidden surface p-12 sm:p-20 text-center space-y-5 bg-ink border hairline">
+    <div id="cart-empty-view" class="hidden p-12 sm:p-20 text-center space-y-5 bg-ink border hairline">
       <div class="w-16 h-16 rounded-full bg-obsidian border hairline flex items-center justify-center mx-auto text-zinc-500">
         <i data-lucide="shopping-cart" class="w-8 h-8"></i>
       </div>
@@ -294,10 +337,10 @@
       </button>
     </div>
 
-    <!-- Filled Cart Container (Shopee Table Layout) -->
+    <!-- Filled Cart Container -->
     <div id="cart-filled-view" class="space-y-6">
       
-      <!-- Table Header (Shopee Header Style) -->
+      <!-- Table Header -->
       <div class="bg-ink border hairline px-6 py-3.5 hidden md:grid md:grid-cols-12 gap-4 text-xs font-semibold text-zinc-400 uppercase tracking-wider items-center">
         <div class="col-span-6 flex items-center gap-3">
           <input type="checkbox" id="chk-select-all" checked onchange="toggleSelectAllItems(this)" class="w-4 h-4 rounded border-zinc-700 bg-obsidian text-white cursor-pointer">
@@ -308,7 +351,7 @@
         <div class="col-span-2 text-right">Total Harga</div>
       </div>
 
-      <!-- Store Group Card (Shopee Store Box) -->
+      <!-- Store Group Card -->
       <div class="bg-ink border hairline divide-y hairline">
         <!-- Store Name Header -->
         <div class="p-4 sm:px-6 bg-obsidian/70 flex items-center justify-between">
@@ -322,15 +365,11 @@
         </div>
 
         <!-- Cart Item Rows Container -->
-        <div id="cart-page-items-list" class="divide-y hairline">
-          <!-- Populated by JS -->
-        </div>
+        <div id="cart-page-items-list" class="divide-y hairline"></div>
       </div>
 
       <!-- Shopee Bottom Sticky Summary Bar -->
       <div class="sticky bottom-0 z-30 bg-ink border hairline p-4 sm:p-6 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 backdrop-blur-md">
-        
-        <!-- Left: Select all & Batch delete -->
         <div class="flex items-center justify-between w-full md:w-auto gap-6 text-xs text-zinc-400">
           <label class="flex items-center gap-2.5 cursor-pointer">
             <input type="checkbox" id="chk-select-all-bottom" checked onchange="toggleSelectAllItems(this)" class="w-4 h-4 rounded border-zinc-700 bg-obsidian text-white cursor-pointer">
@@ -339,7 +378,6 @@
           <button type="button" onclick="clearCartItems()" class="text-zinc-500 hover:text-rose-400 text-xs underline uppercase tracking-wider">Hapus Keranjang</button>
         </div>
 
-        <!-- Right: Subtotal & Big Checkout Button -->
         <div class="flex items-center justify-between md:justify-end w-full md:w-auto gap-6">
           <div class="text-right">
             <div class="text-xs text-zinc-400 flex items-baseline gap-2">
@@ -354,7 +392,6 @@
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </button>
         </div>
-
       </div>
 
     </div>
@@ -489,7 +526,7 @@
 
       </div>
 
-      <!-- Right 4 Cols: Ringkasan Belanja (Sticky) -->
+      <!-- Right 4 Cols: Ringkasan Belanja -->
       <div class="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
         
         <!-- Voucher Box -->
@@ -527,7 +564,7 @@
 
           <button type="button" onclick="submitShopeeCheckout()" id="btn-submit-order" class="w-full h-12 bg-white text-obsidian hover:bg-zinc-200 text-[10px] uppercase tracking-[0.18em] font-extrabold flex items-center justify-center gap-2 transition-all">
             <i data-lucide="lock" class="w-3.5 h-3.5"></i>
-            <span>Buat Pesanan Sekarang</span>
+            <span id="submit-order-text">Buat Pesanan Sekarang</span>
           </button>
         </div>
 
@@ -592,7 +629,6 @@
   <!-- MODAL: PROMO POPUP EKSKLUSIF -->
   <div id="modal-promo" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-md anim-fade-in" role="dialog" aria-modal="true">
     <div class="bg-ink border hairline max-w-md w-full p-6 sm:p-8 relative anim-scale-up text-center space-y-5 glow-card">
-      
       <button type="button" onclick="closePromoModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2" aria-label="Tutup promo">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
@@ -603,7 +639,6 @@
         <p class="text-xs text-zinc-400 mt-1">Nikmati potongan harga eksklusif untuk seluruh koleksi pilihan hari ini.</p>
       </div>
 
-      <!-- Voucher Code Card with Copy Action -->
       <div class="p-4 bg-obsidian border hairline rounded-lg space-y-2.5">
         <span class="text-[10px] text-zinc-500 uppercase tracking-widest block font-mono">Kode Kupon Anda:</span>
         <div class="flex items-center justify-center gap-3">
@@ -624,22 +659,17 @@
           Nanti Saja
         </button>
       </div>
-
     </div>
   </div>
 
   <!-- MODAL: PRODUCT DETAIL & REVIEWS -->
   <div id="modal-product-detail" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md anim-fade-in" role="dialog" aria-modal="true">
     <div class="bg-ink border hairline max-w-4xl w-full p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto custom-scroll space-y-8 anim-scale-up">
-      
       <button type="button" onclick="closeProductDetailModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white p-2" aria-label="Tutup detail">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
 
-      <!-- Main Product Info Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-        
-        <!-- Image Preview -->
         <div class="space-y-3">
           <div class="aspect-[4/5] bg-zinc-900 overflow-hidden border hairline relative">
             <img id="dtl-image" src="" alt="Produk" class="w-full h-full object-cover">
@@ -647,7 +677,6 @@
           </div>
         </div>
 
-        <!-- Product Specs & Action Buttons -->
         <div class="space-y-5">
           <div>
             <span id="dtl-category" class="eyebrow uppercase">Kategori</span>
@@ -662,20 +691,17 @@
             </div>
           </div>
 
-          <!-- Pricing -->
           <div class="py-3 border-y hairline flex items-baseline gap-3">
             <span id="dtl-price" class="text-2xl font-bold font-mono text-white">Rp 0</span>
             <span id="dtl-orig-price" class="text-xs line-through text-zinc-500 font-mono">Rp 0</span>
             <span class="text-[10px] text-zinc-400 font-mono uppercase tracking-wider">Pajak Termasuk</span>
           </div>
 
-          <!-- Description -->
           <div class="space-y-1.5">
             <span class="eyebrow block">Spesifikasi & Material</span>
             <p id="dtl-desc" class="text-xs leading-relaxed text-zinc-300">Deskripsi produk...</p>
           </div>
 
-          <!-- Variation Selection -->
           <div class="space-y-1.5">
             <span class="eyebrow block">Pilihan Ukuran</span>
             <div class="flex gap-2 text-xs" id="dtl-variants">
@@ -685,7 +711,6 @@
             </div>
           </div>
 
-          <!-- Quantity Selector & Action Buttons -->
           <div class="space-y-4 pt-2">
             <div class="flex items-center gap-4">
               <span class="text-xs text-zinc-400">Jumlah:</span>
@@ -708,12 +733,9 @@
               </button>
             </div>
           </div>
-
         </div>
-
       </div>
 
-      <!-- Verified Customer Reviews Section -->
       <div id="dtl-reviews-section" class="border-t hairline pt-6 space-y-4">
         <div class="flex items-center justify-between">
           <div>
@@ -724,10 +746,8 @@
             Nilai Rata-rata: <b class="text-white">4.9 / 5.0</b>
           </div>
         </div>
-
         <div id="dtl-reviews-list" class="space-y-3"></div>
       </div>
-
     </div>
   </div>
 
@@ -747,7 +767,7 @@
         <label for="track-inv-input" class="text-zinc-400 block text-[11px]">Masukkan Nomor Invoice:</label>
         <div class="flex gap-2">
           <input type="text" id="track-inv-input" placeholder="Contoh: INV-2026-6351" class="flex-1 bg-obsidian border hairline px-3.5 py-2.5 text-white font-mono uppercase focus:outline-none">
-          <button type="button" onclick="checkOrderStatus()" class="px-4 bg-white text-obsidian font-bold text-[9px] uppercase tracking-wider">Cari</button>
+          <button type="button" onclick="checkOrderStatus()" id="btn-track-submit" class="px-4 bg-white text-obsidian font-bold text-[9px] uppercase tracking-wider">Cari</button>
         </div>
       </div>
       <div id="track-result" class="hidden p-4 bg-obsidian border hairline space-y-2 font-mono text-[11px]"></div>
@@ -797,7 +817,7 @@
       </div>
       <div class="flex justify-end gap-2 pt-2">
         <button type="button" onclick="closeAddProductModal()" class="px-4 py-2 border hairline text-zinc-300">Batal</button>
-        <button type="button" onclick="submitNewProduct()" class="px-4 py-2 bg-white text-obsidian font-bold text-[9px] uppercase tracking-wider">Simpan ke DB</button>
+        <button type="button" onclick="submitNewProduct()" id="btn-adm-save-prod" class="px-4 py-2 bg-white text-obsidian font-bold text-[9px] uppercase tracking-wider">Simpan ke DB</button>
       </div>
     </div>
   </div>
@@ -861,6 +881,23 @@
     let selectedDetailProduct = null;
     let detailQty = 1;
 
+    // Loading Bar Controller
+    function startTopLoading() {
+      const bar = document.getElementById('top-loading-bar');
+      bar.style.opacity = '1';
+      bar.style.width = '40%';
+      setTimeout(() => { if (bar.style.width === '40%') bar.style.width = '75%'; }, 150);
+    }
+
+    function finishTopLoading() {
+      const bar = document.getElementById('top-loading-bar');
+      bar.style.width = '100%';
+      setTimeout(() => {
+        bar.style.opacity = '0';
+        setTimeout(() => { bar.style.width = '0%'; }, 250);
+      }, 200);
+    }
+
     // Authentic Customer Reviews Database
     const SAMPLE_REVIEWS = [
       {
@@ -901,6 +938,7 @@
 
     async function fetchProducts() {
       try {
+        startTopLoading();
         let url = `/api/products?category=${encodeURIComponent(currentCategory)}`;
         if (searchQuery) url += `&search=${encodeURIComponent(searchQuery)}`;
         const res = await fetch(url);
@@ -911,6 +949,17 @@
         }
       } catch (err) {
         console.error('Fetch products error:', err);
+      } finally {
+        finishTopLoading();
+        hidePreloader();
+      }
+    }
+
+    function hidePreloader() {
+      const preloader = document.getElementById('page-preloader');
+      if (preloader && preloader.style.display !== 'none') {
+        preloader.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => { preloader.style.display = 'none'; }, 500);
       }
     }
 
@@ -972,6 +1021,15 @@
       document.querySelectorAll('.cat-pill').forEach(btn => btn.classList.remove('is-active'));
       const activeBtn = document.getElementById(`cat-${cat}`);
       if (activeBtn) activeBtn.classList.add('is-active');
+      
+      // Render quick skeleton while fetching
+      const grid = document.getElementById('product-grid');
+      grid.innerHTML = `
+        <div class="space-y-3"><div class="skeleton aspect-[4/5] border hairline"></div><div class="skeleton h-3 w-4/5"></div></div>
+        <div class="space-y-3"><div class="skeleton aspect-[4/5] border hairline"></div><div class="skeleton h-3 w-3/4"></div></div>
+        <div class="space-y-3"><div class="skeleton aspect-[4/5] border hairline"></div><div class="skeleton h-3 w-4/5"></div></div>
+        <div class="space-y-3"><div class="skeleton aspect-[4/5] border hairline"></div><div class="skeleton h-3 w-3/4"></div></div>
+      `;
       fetchProducts();
     }
 
@@ -1356,6 +1414,15 @@
 
       if (!name || !phone || !address) return alert('Mohon lengkapi nama, nomor telepon, dan alamat pengiriman.');
 
+      const submitBtn = document.getElementById('btn-submit-order');
+      const submitText = document.getElementById('submit-order-text');
+      
+      // Loading State on Submit Button
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-70', 'cursor-wait');
+      submitText.textContent = 'Memproses Pesanan...';
+      startTopLoading();
+
       try {
         const res = await fetch('/api/orders', {
           method: 'POST',
@@ -1386,6 +1453,11 @@
         }
       } catch (err) {
         alert('Kesalahan koneksi: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-70', 'cursor-wait');
+        submitText.textContent = 'Buat Pesanan Sekarang';
+        finishTopLoading();
       }
     }
 
@@ -1393,8 +1465,10 @@
       document.getElementById('invoice-modal').classList.add('hidden');
     }
 
-    // View Switcher (Store / Cart / Checkout / Admin)
+    // View Switcher with Top Progress Loading Animation
     function switchView(view) {
+      startTopLoading();
+
       document.getElementById('view-store').classList.add('hidden');
       document.getElementById('view-cart').classList.add('hidden');
       document.getElementById('view-checkout').classList.add('hidden');
@@ -1418,6 +1492,7 @@
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
       lucide.createIcons();
+      setTimeout(finishTopLoading, 180);
     }
 
     function toggleAdminView() {
@@ -1434,8 +1509,12 @@
       if (!inv) return alert('Masukkan nomor invoice.');
 
       const resultBox = document.getElementById('track-result');
-      resultBox.innerHTML = '<span class="text-zinc-500">Mencari data pesanan...</span>';
+      const trackBtn = document.getElementById('btn-track-submit');
+
+      resultBox.innerHTML = '<span class="text-zinc-500 font-mono">Mencari data pesanan ke server...</span>';
       resultBox.classList.remove('hidden');
+      trackBtn.textContent = 'Mencari...';
+      trackBtn.disabled = true;
 
       try {
         const res = await fetch(`/api/orders/${encodeURIComponent(inv)}`);
@@ -1455,12 +1534,16 @@
         }
       } catch (err) {
         resultBox.innerHTML = `<span class="text-rose-400">Gagal melacak pesanan: ${escapeHTML(err.message)}</span>`;
+      } finally {
+        trackBtn.textContent = 'Cari';
+        trackBtn.disabled = false;
       }
     }
 
     // Admin Panel Actions
     async function fetchAdminData() {
       try {
+        startTopLoading();
         const [statsRes, ordersRes] = await Promise.all([fetch('/api/stats'), fetch('/api/orders')]);
         const [statsData, ordersData] = await Promise.all([statsRes.json(), ordersRes.json()]);
 
@@ -1497,6 +1580,8 @@
         }
       } catch (err) {
         console.error('Fetch admin error:', err);
+      } finally {
+        finishTopLoading();
       }
     }
 
@@ -1527,6 +1612,11 @@
 
       if (!name || !price || !image) return alert('Nama, harga, dan tautan gambar produk wajib diisi.');
 
+      const btn = document.getElementById('btn-adm-save-prod');
+      btn.textContent = 'Menyimpan...';
+      btn.disabled = true;
+      startTopLoading();
+
       try {
         const res = await fetch('/api/products', {
           method: 'POST',
@@ -1541,6 +1631,10 @@
         fetchAdminData();
       } catch (err) {
         alert('Gagal menambah produk: ' + err.message);
+      } finally {
+        btn.textContent = 'Simpan ke DB';
+        btn.disabled = false;
+        finishTopLoading();
       }
     }
 
