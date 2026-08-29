@@ -76,14 +76,12 @@
     
     /* Animations */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes fadeOut { from { opacity: 1; visibility: visible; } to { opacity: 0; visibility: hidden; } }
     @keyframes scaleUp { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     @keyframes bounceBadge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
     @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(255, 255, 255, 0.05); } 50% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.15); } }
-    @keyframes topBarProgress { 0% { width: 0%; opacity: 1; } 50% { width: 70%; } 100% { width: 100%; opacity: 0; } }
 
-    .anim-fade-in { animation: fadeIn 0.3s ease-out forwards; }
-    .anim-scale-up { animation: scaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .anim-fade-in { animation: fadeIn 0.25s ease-out forwards; }
+    .anim-scale-up { animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     .badge-bounce { animation: bounceBadge 0.3s ease-in-out; }
     .glow-card { animation: pulseGlow 4s infinite; }
 
@@ -97,9 +95,43 @@
       background: #ffffff;
       z-index: 9999;
       box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-      transition: width 0.3s ease, opacity 0.3s ease;
+      transition: width 0.25s ease, opacity 0.2s ease;
       pointer-events: none;
     }
+
+    /* Ultra-lightweight View Transition Spinner Overlay */
+    #view-transition-spinner {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: rgba(9, 9, 11, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity;
+    }
+    #view-transition-spinner.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .luxury-spinner {
+      width: 28px;
+      height: 28px;
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      will-change: transform;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Skeleton Loading Animation */
     .skeleton { 
@@ -111,12 +143,13 @@
 
     /* Preloader Spinner */
     .preloader-spin {
-      border: 2px solid rgba(255, 255, 255, 0.1);
+      width: 28px;
+      height: 28px;
+      border: 2px solid rgba(255, 255, 255, 0.12);
       border-top-color: #ffffff;
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      animation: spin 0.7s linear infinite;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
@@ -124,13 +157,19 @@
   <!-- Top Global Page Loading Bar -->
   <div id="top-loading-bar"></div>
 
-  <!-- Initial Brand Preloader (Animasi Splash Screen) -->
+  <!-- Ultra-lightweight View Transition Spinner (Ringan & Cepat) -->
+  <div id="view-transition-spinner" aria-hidden="true">
+    <div class="luxury-spinner"></div>
+    <span class="text-[9px] uppercase tracking-[0.25em] text-zinc-400 font-mono">Memuat...</span>
+  </div>
+
+  <!-- Initial Brand Preloader (Splash Screen) -->
   <div id="page-preloader" class="fixed inset-0 z-[100] bg-obsidian flex flex-col items-center justify-center space-y-4 transition-opacity duration-500">
     <div class="flex items-baseline gap-2">
       <span class="text-2xl font-extrabold tracking-tight text-white">FalStore</span>
       <span class="font-editorial italic text-zinc-500 text-xl">&eacute;tude</span>
     </div>
-    <div class="w-7 h-7 preloader-spin"></div>
+    <div class="preloader-spin"></div>
     <span class="text-[9px] uppercase tracking-[0.25em] text-zinc-500 font-mono">Memuat Koleksi...</span>
   </div>
 
@@ -182,7 +221,7 @@
           <span id="admin-toggle-text" class="hidden sm:inline">Panel Toko</span>
         </button>
 
-        <!-- Keranjang Belanja Button (NAVIGATES TO FULL CART PAGE) -->
+        <!-- Keranjang Belanja Button -->
         <button type="button" onclick="switchView('cart')" class="h-10 px-4 bg-white text-obsidian hover:bg-zinc-200 text-[10px] uppercase tracking-[0.15em] font-bold inline-flex items-center gap-2.5 transition-colors">
           <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i>
           <span class="text-[10px] uppercase tracking-[0.15em] font-semibold">Keranjang</span>
@@ -269,7 +308,7 @@
         </div>
       </div>
 
-      <!-- Product Grid with Loading Skeletons -->
+      <!-- Product Grid -->
       <div id="product-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-10 sm:gap-y-14">
         <div class="space-y-3"><div class="skeleton aspect-[4/5] border hairline"></div><div class="skeleton h-3 w-4/5"></div><div class="skeleton h-3 w-2/5"></div></div>
         <div class="space-y-3"><div class="skeleton aspect-[4/5] border hairline"></div><div class="skeleton h-3 w-3/4"></div><div class="skeleton h-3 w-1/2"></div></div>
@@ -885,8 +924,8 @@
     function startTopLoading() {
       const bar = document.getElementById('top-loading-bar');
       bar.style.opacity = '1';
-      bar.style.width = '40%';
-      setTimeout(() => { if (bar.style.width === '40%') bar.style.width = '75%'; }, 150);
+      bar.style.width = '45%';
+      setTimeout(() => { if (bar.style.width === '45%') bar.style.width = '80%'; }, 120);
     }
 
     function finishTopLoading() {
@@ -894,8 +933,8 @@
       bar.style.width = '100%';
       setTimeout(() => {
         bar.style.opacity = '0';
-        setTimeout(() => { bar.style.width = '0%'; }, 250);
-      }, 200);
+        setTimeout(() => { bar.style.width = '0%'; }, 200);
+      }, 150);
     }
 
     // Authentic Customer Reviews Database
@@ -959,7 +998,7 @@
       const preloader = document.getElementById('page-preloader');
       if (preloader && preloader.style.display !== 'none') {
         preloader.classList.add('opacity-0', 'pointer-events-none');
-        setTimeout(() => { preloader.style.display = 'none'; }, 500);
+        setTimeout(() => { preloader.style.display = 'none'; }, 400);
       }
     }
 
@@ -981,7 +1020,7 @@
       products.forEach((p, idx) => {
         const card = document.createElement('article');
         card.className = 'product-card group flex flex-col justify-between anim-fade-in';
-        card.style.animationDelay = `${idx * 0.05}s`;
+        card.style.animationDelay = `${idx * 0.04}s`;
         card.onclick = () => openProductDetail(p.id);
 
         const numStr = String(idx + 1).padStart(2, '0');
@@ -1022,7 +1061,6 @@
       const activeBtn = document.getElementById(`cat-${cat}`);
       if (activeBtn) activeBtn.classList.add('is-active');
       
-      // Render quick skeleton while fetching
       const grid = document.getElementById('product-grid');
       grid.innerHTML = `
         <div class="space-y-3"><div class="skeleton aspect-[4/5] border hairline"></div><div class="skeleton h-3 w-4/5"></div></div>
@@ -1265,7 +1303,6 @@
         const row = document.createElement('div');
         row.className = 'p-4 sm:p-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-center hover:bg-zinc-900/30 transition-colors';
         row.innerHTML = `
-          <!-- Product & Checkbox (6 cols) -->
           <div class="col-span-1 md:col-span-6 flex items-center gap-3 sm:gap-4 min-w-0">
             <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleItemSelection('${escapeHTML(item.id)}', this.checked)" class="w-4 h-4 rounded border-zinc-700 bg-obsidian text-white cursor-pointer shrink-0">
             <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}" class="w-16 h-20 sm:w-20 sm:h-24 object-cover bg-zinc-900 shrink-0 border hairline">
@@ -1281,12 +1318,10 @@
             </div>
           </div>
 
-          <!-- Unit Price (2 cols) -->
           <div class="hidden md:block md:col-span-2 text-center text-xs font-mono font-semibold text-zinc-300">
             ${formatRupiah(item.price)}
           </div>
 
-          <!-- Quantity Selector (2 cols) -->
           <div class="col-span-1 md:col-span-2 flex md:justify-center items-center gap-2">
             <div class="inline-flex border hairline items-center bg-obsidian">
               <button type="button" onclick="updateQty('${escapeHTML(item.id)}', -1)" class="w-7 h-7 flex items-center justify-center hover:bg-zinc-800 text-xs">-</button>
@@ -1295,7 +1330,6 @@
             </div>
           </div>
 
-          <!-- Total Price & Action (2 cols) -->
           <div class="hidden md:flex md:col-span-2 flex-col items-end gap-1">
             <span class="text-xs font-bold font-mono text-white">${formatRupiah(item.price * item.qty)}</span>
             <button type="button" onclick="removeFromCart('${escapeHTML(item.id)}')" class="text-[10px] text-zinc-500 hover:text-rose-400 underline uppercase tracking-wider">Hapus</button>
@@ -1465,34 +1499,42 @@
       document.getElementById('invoice-modal').classList.add('hidden');
     }
 
-    // View Switcher with Top Progress Loading Animation
+    // View Switcher with Lightweight Transition Spinner (Ultra-Snappy & Zero Lag)
     function switchView(view) {
+      const spinner = document.getElementById('view-transition-spinner');
+      if (spinner) spinner.classList.add('is-active');
       startTopLoading();
 
-      document.getElementById('view-store').classList.add('hidden');
-      document.getElementById('view-cart').classList.add('hidden');
-      document.getElementById('view-checkout').classList.add('hidden');
-      document.getElementById('view-admin').classList.add('hidden');
+      setTimeout(() => {
+        document.getElementById('view-store').classList.add('hidden');
+        document.getElementById('view-cart').classList.add('hidden');
+        document.getElementById('view-checkout').classList.add('hidden');
+        document.getElementById('view-admin').classList.add('hidden');
 
-      if (view === 'cart') {
-        document.getElementById('view-cart').classList.remove('hidden');
-        renderCartPage();
-      } else if (view === 'checkout') {
-        document.getElementById('view-checkout').classList.remove('hidden');
-        renderShopeeCheckoutItems();
-      } else if (view === 'admin') {
-        document.getElementById('view-admin').classList.remove('hidden');
-        document.getElementById('admin-toggle-text').textContent = 'Ke Toko';
-        fetchAdminData();
-      } else {
-        document.getElementById('view-store').classList.remove('hidden');
-        document.getElementById('admin-toggle-text').textContent = 'Panel Toko';
-        fetchProducts();
-      }
+        if (view === 'cart') {
+          document.getElementById('view-cart').classList.remove('hidden');
+          renderCartPage();
+        } else if (view === 'checkout') {
+          document.getElementById('view-checkout').classList.remove('hidden');
+          renderShopeeCheckoutItems();
+        } else if (view === 'admin') {
+          document.getElementById('view-admin').classList.remove('hidden');
+          document.getElementById('admin-toggle-text').textContent = 'Ke Toko';
+          fetchAdminData();
+        } else {
+          document.getElementById('view-store').classList.remove('hidden');
+          document.getElementById('admin-toggle-text').textContent = 'Panel Toko';
+          fetchProducts();
+        }
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      lucide.createIcons();
-      setTimeout(finishTopLoading, 180);
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        lucide.createIcons();
+
+        setTimeout(() => {
+          if (spinner) spinner.classList.remove('is-active');
+          finishTopLoading();
+        }, 90);
+      }, 40);
     }
 
     function toggleAdminView() {
