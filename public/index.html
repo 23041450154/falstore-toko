@@ -74,16 +74,14 @@
     .custom-scroll::-webkit-scrollbar { width: 5px; }
     .custom-scroll::-webkit-scrollbar-thumb { background: #27272a; border-radius: 999px; }
     
-    /* Smooth Animations */
+    /* Animations */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes scaleUp { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-    @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+    @keyframes scaleUp { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     @keyframes bounceBadge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
     @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(255, 255, 255, 0.05); } 50% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.15); } }
 
     .anim-fade-in { animation: fadeIn 0.3s ease-out forwards; }
     .anim-scale-up { animation: scaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    .anim-slide-in-right { animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     .badge-bounce { animation: bounceBadge 0.3s ease-in-out; }
     .glow-card { animation: pulseGlow 4s infinite; }
 
@@ -93,11 +91,11 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-  <!-- Promo Top Bar (Clickable to trigger Promo Modal) -->
+  <!-- Promo Top Bar -->
   <aside onclick="openPromoModal()" class="cursor-pointer border-b hairline bg-ink text-zinc-400 py-2 px-4 text-center text-[10px] uppercase tracking-[0.2em] font-medium flex items-center justify-center gap-3 hover:text-white transition-colors">
     <span class="flex items-center gap-1.5">
       <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-      <span>Koleksi Edisi 2026 &bull; Potongan 50% dengan Voucher <strong class="text-white font-bold tracking-wider underline">FALSTORE50</strong> &bull; Klik untuk Klaim</span>
+      <span>Koleksi Edisi 2026 &bull; Diskon 50% Gunakan Voucher <strong class="text-white font-bold tracking-wider underline">FALSTORE50</strong> &bull; Klik untuk Klaim</span>
     </span>
   </aside>
 
@@ -123,7 +121,7 @@
 
       <!-- Action Buttons -->
       <div class="flex items-center gap-3">
-        <!-- Klaim Promo Pop Up Button -->
+        <!-- Klaim Promo Button -->
         <button type="button" onclick="openPromoModal()" class="h-10 px-3.5 border hairline hover:border-white text-[10px] uppercase tracking-[0.15em] font-medium inline-flex items-center gap-2 transition-all">
           <i data-lucide="tag" class="w-3.5 h-3.5 text-zinc-300"></i>
           <span class="hidden sm:inline">Voucher 50%</span>
@@ -141,8 +139,8 @@
           <span id="admin-toggle-text" class="hidden sm:inline">Panel Toko</span>
         </button>
 
-        <!-- Keranjang Belanja -->
-        <button type="button" onclick="toggleCartDrawer(true)" class="h-10 px-4 bg-white text-obsidian hover:bg-zinc-200 text-[10px] uppercase tracking-[0.15em] font-bold inline-flex items-center gap-2.5 transition-colors">
+        <!-- Keranjang Belanja Button (NAVIGATES TO FULL CART PAGE) -->
+        <button type="button" onclick="switchView('cart')" class="h-10 px-4 bg-white text-obsidian hover:bg-zinc-200 text-[10px] uppercase tracking-[0.15em] font-bold inline-flex items-center gap-2.5 transition-colors">
           <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i>
           <span class="text-[10px] uppercase tracking-[0.15em] font-semibold">Keranjang</span>
           <span id="cart-badge" class="min-w-[18px] h-[18px] px-1 bg-obsidian text-white text-[9px] font-bold inline-flex items-center justify-center rounded-full">0</span>
@@ -259,14 +257,117 @@
     </section>
   </main>
 
-  <!-- 2. FULL-PAGE SHOPEE-STYLE CHECKOUT VIEW -->
-  <main id="view-checkout" class="hidden max-w-[1200px] mx-auto px-4 sm:px-8 py-8 w-full flex-1 space-y-8">
+  <!-- 2. FULL-PAGE SHOPEE-STYLE CART VIEW (HALAMAN KERANJANG PENUH) -->
+  <main id="view-cart" class="hidden max-w-[1240px] mx-auto px-4 sm:px-8 py-8 sm:py-12 w-full flex-1 space-y-8 anim-fade-in">
+    
+    <!-- Cart Header Bar -->
+    <div class="flex items-center justify-between border-b hairline pb-4">
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="switchView('store')" class="text-zinc-400 hover:text-white flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Lanjut Belanja</span>
+        </button>
+        <span class="text-zinc-600">/</span>
+        <h1 class="text-sm sm:text-base font-bold text-white uppercase tracking-wider flex items-center gap-2">
+          <i data-lucide="shopping-cart" class="w-4 h-4 text-white"></i>
+          <span>Keranjang Belanja</span>
+        </h1>
+      </div>
+      <div class="text-xs text-zinc-400 font-mono hidden sm:flex items-center gap-2">
+        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+        <span>Garansi Belanja Aman & Asli</span>
+      </div>
+    </div>
+
+    <!-- Empty Cart State Container -->
+    <div id="cart-empty-view" class="hidden surface p-12 sm:p-20 text-center space-y-5 bg-ink border hairline">
+      <div class="w-16 h-16 rounded-full bg-obsidian border hairline flex items-center justify-center mx-auto text-zinc-500">
+        <i data-lucide="shopping-cart" class="w-8 h-8"></i>
+      </div>
+      <div class="space-y-1">
+        <h3 class="text-base font-bold text-white">Keranjang belanja Anda masih kosong</h3>
+        <p class="text-xs text-zinc-400">Jelajahi beragam produk pilihan kami dan temukan barang favorit Anda.</p>
+      </div>
+      <button type="button" onclick="switchView('store')" class="h-11 px-6 bg-white text-obsidian hover:bg-zinc-200 text-[10px] uppercase tracking-[0.18em] font-extrabold inline-flex items-center gap-2 transition-all">
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+        <span>Mulai Belanja Sekarang</span>
+      </button>
+    </div>
+
+    <!-- Filled Cart Container (Shopee Table Layout) -->
+    <div id="cart-filled-view" class="space-y-6">
+      
+      <!-- Table Header (Shopee Header Style) -->
+      <div class="bg-ink border hairline px-6 py-3.5 hidden md:grid md:grid-cols-12 gap-4 text-xs font-semibold text-zinc-400 uppercase tracking-wider items-center">
+        <div class="col-span-6 flex items-center gap-3">
+          <input type="checkbox" id="chk-select-all" checked onchange="toggleSelectAllItems(this)" class="w-4 h-4 rounded border-zinc-700 bg-obsidian text-white cursor-pointer">
+          <label for="chk-select-all" class="cursor-pointer text-white">Produk</label>
+        </div>
+        <div class="col-span-2 text-center">Harga Satuan</div>
+        <div class="col-span-2 text-center">Kuantitas</div>
+        <div class="col-span-2 text-right">Total Harga</div>
+      </div>
+
+      <!-- Store Group Card (Shopee Store Box) -->
+      <div class="bg-ink border hairline divide-y hairline">
+        <!-- Store Name Header -->
+        <div class="p-4 sm:px-6 bg-obsidian/70 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="text-[9px] bg-white text-obsidian px-1.5 py-0.5 font-bold uppercase tracking-wider">Official</span>
+            <span class="text-xs font-bold text-white">FalStore Studio Palembang</span>
+          </div>
+          <span class="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+            <i data-lucide="truck" class="w-3.5 h-3.5"></i> Bebas Ongkir
+          </span>
+        </div>
+
+        <!-- Cart Item Rows Container -->
+        <div id="cart-page-items-list" class="divide-y hairline">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Shopee Bottom Sticky Summary Bar -->
+      <div class="sticky bottom-0 z-30 bg-ink border hairline p-4 sm:p-6 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 backdrop-blur-md">
+        
+        <!-- Left: Select all & Batch delete -->
+        <div class="flex items-center justify-between w-full md:w-auto gap-6 text-xs text-zinc-400">
+          <label class="flex items-center gap-2.5 cursor-pointer">
+            <input type="checkbox" id="chk-select-all-bottom" checked onchange="toggleSelectAllItems(this)" class="w-4 h-4 rounded border-zinc-700 bg-obsidian text-white cursor-pointer">
+            <span class="text-white font-medium">Pilih Semua (<span id="cart-selected-count">0</span>)</span>
+          </label>
+          <button type="button" onclick="clearCartItems()" class="text-zinc-500 hover:text-rose-400 text-xs underline uppercase tracking-wider">Hapus Keranjang</button>
+        </div>
+
+        <!-- Right: Subtotal & Big Checkout Button -->
+        <div class="flex items-center justify-between md:justify-end w-full md:w-auto gap-6">
+          <div class="text-right">
+            <div class="text-xs text-zinc-400 flex items-baseline gap-2">
+              <span>Total (<span id="cart-total-qty">0</span> produk):</span>
+              <span id="cart-page-total" class="text-base sm:text-xl font-extrabold font-mono text-white">Rp 0</span>
+            </div>
+            <span class="text-[10px] text-zinc-500">Belum termasuk ongkir & voucher</span>
+          </div>
+
+          <button type="button" onclick="proceedToShopeeCheckout()" id="btn-cart-checkout" class="h-12 px-8 bg-white text-obsidian hover:bg-zinc-200 text-[11px] uppercase tracking-[0.18em] font-extrabold flex items-center justify-center gap-2 transition-all shadow-lg">
+            <span>Checkout</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 3. FULL-PAGE SHOPEE-STYLE CHECKOUT VIEW -->
+  <main id="view-checkout" class="hidden max-w-[1200px] mx-auto px-4 sm:px-8 py-8 w-full flex-1 space-y-8 anim-fade-in">
     
     <!-- Header Back Breadcrumb -->
     <div class="flex items-center justify-between border-b hairline pb-4">
-      <button type="button" onclick="switchView('store')" class="text-zinc-400 hover:text-white flex items-center gap-2 text-xs font-semibold uppercase tracking-wider">
+      <button type="button" onclick="switchView('cart')" class="text-zinc-400 hover:text-white flex items-center gap-2 text-xs font-semibold uppercase tracking-wider">
         <i data-lucide="arrow-left" class="w-4 h-4"></i>
-        <span>Kembali ke Beranda</span>
+        <span>Kembali ke Keranjang</span>
       </button>
       <div class="text-xs text-zinc-400 flex items-center gap-2 font-mono">
         <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
@@ -435,7 +536,7 @@
     </div>
   </main>
 
-  <!-- 3. ADMIN MANAGEMENT VIEW -->
+  <!-- 4. ADMIN MANAGEMENT VIEW -->
   <main id="view-admin" class="hidden max-w-[1440px] mx-auto px-4 sm:px-8 py-10 w-full flex-1">
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b hairline pb-8">
       <div>
@@ -488,7 +589,7 @@
     </div>
   </main>
 
-  <!-- MODAL: PROMO POPUP EKSKLUSIF (NEW FEATURE) -->
+  <!-- MODAL: PROMO POPUP EKSKLUSIF -->
   <div id="modal-promo" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-md anim-fade-in" role="dialog" aria-modal="true">
     <div class="bg-ink border hairline max-w-md w-full p-6 sm:p-8 relative anim-scale-up text-center space-y-5 glow-card">
       
@@ -630,40 +731,6 @@
     </div>
   </div>
 
-  <!-- Slide-over Cart Drawer -->
-  <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden anim-fade-in" role="dialog" aria-modal="true" aria-label="Keranjang belanja">
-    <div class="absolute inset-0 bg-black/75 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer(false)"></div>
-    <div class="fixed inset-y-0 right-0 max-w-full flex pl-8">
-      <div class="w-screen max-w-md bg-ink border-l hairline flex flex-col justify-between p-6 sm:p-8 anim-slide-in-right">
-        
-        <div class="flex items-center justify-between pb-4 border-b hairline">
-          <div>
-            <span class="eyebrow">Keranjang</span>
-            <h3 class="mt-1 text-lg font-bold">Daftar Belanja</h3>
-          </div>
-          <button type="button" onclick="toggleCartDrawer(false)" class="p-2 text-zinc-400 hover:text-white" aria-label="Tutup keranjang">
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
-        </div>
-
-        <div id="cart-items-container" class="flex-1 overflow-y-auto py-6 space-y-4 custom-scroll"></div>
-
-        <div class="pt-4 border-t hairline space-y-4">
-          <div class="flex justify-between text-sm font-bold text-white">
-            <span>Subtotal:</span>
-            <span id="cart-total" class="font-mono">Rp 0</span>
-          </div>
-
-          <button type="button" onclick="proceedToShopeeCheckout()" id="btn-checkout" class="w-full h-12 bg-white text-obsidian hover:bg-zinc-200 text-[10px] uppercase tracking-[0.18em] font-extrabold flex items-center justify-center gap-2 transition-colors">
-            <i data-lucide="shopping-cart" class="w-4 h-4"></i>
-            <span>Lanjut ke Checkout</span>
-          </button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
   <!-- Track Order Modal -->
   <div id="track-modal" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-md anim-fade-in" role="dialog" aria-modal="true">
     <div class="bg-ink border hairline max-w-md w-full p-6 sm:p-8 space-y-4 text-xs anim-scale-up">
@@ -779,7 +846,7 @@
       <div class="flex gap-6 text-[10px] uppercase tracking-[0.18em]">
         <a href="#" onclick="switchView('store'); return false;" class="hover:text-white transition-colors">Katalog</a>
         <a href="https://agent.naufal.me" target="_blank" class="hover:text-white transition-colors">Dashboard AI</a>
-        <a href="https://github.com/23041450154" target="_blank" class="hover:text-white transition-colors">GitHub</a>
+        <a href="https://github.com/23041450154/falstore-toko" target="_blank" class="hover:text-white transition-colors">GitHub</a>
       </div>
     </div>
   </footer>
@@ -944,6 +1011,7 @@
       discountPercent = 0.5;
       showToast('Diskon 50% diaktifkan otomatis!');
       closePromoModal();
+      switchView('store');
       document.getElementById('katalog').scrollIntoView({ behavior: 'smooth' });
     }
 
@@ -1020,7 +1088,7 @@
       }
       closeProductDetailModal();
       showToast(`${detailQty}x "${selectedDetailProduct.name}" dimasukkan ke keranjang`);
-      updateCartUI();
+      updateCartState();
     }
 
     function buyDtlNowDirectly() {
@@ -1030,25 +1098,26 @@
         name: selectedDetailProduct.name,
         price: Number(selectedDetailProduct.price),
         image: selectedDetailProduct.image,
-        qty: detailQty
+        qty: detailQty,
+        selected: true
       }];
       localStorage.setItem('falstore_cart', JSON.stringify(cart));
-      updateCartUI();
+      updateCartState();
       closeProductDetailModal();
-      switchView('checkout');
+      switchView('cart');
     }
 
-    // Cart Management
+    // Cart Management & Page Renderer (Shopee Full Page)
     function addToCart(productId, showNotification = true) {
       const prod = products.find(p => p.id === productId);
       if (!prod) return;
 
       const existing = cart.find(item => item.id === productId);
       if (existing) existing.qty++;
-      else cart.push({ id: prod.id, name: prod.name, price: Number(prod.price), image: prod.image, qty: 1 });
+      else cart.push({ id: prod.id, name: prod.name, price: Number(prod.price), image: prod.image, qty: 1, selected: true });
 
       localStorage.setItem('falstore_cart', JSON.stringify(cart));
-      updateCartUI();
+      updateCartState();
       if (showNotification) showToast(`"${prod.name}" masuk ke keranjang`);
 
       // Trigger Badge Bounce Animation
@@ -1064,79 +1133,144 @@
       item.qty += delta;
       if (item.qty <= 0) cart = cart.filter(i => i.id !== productId);
       localStorage.setItem('falstore_cart', JSON.stringify(cart));
-      updateCartUI();
-      if (document.getElementById('view-checkout').classList.contains('hidden') === false) {
-        renderShopeeCheckoutItems();
-      }
+      updateCartState();
     }
 
     function removeFromCart(productId) {
       cart = cart.filter(i => i.id !== productId);
       localStorage.setItem('falstore_cart', JSON.stringify(cart));
-      updateCartUI();
-      if (document.getElementById('view-checkout').classList.contains('hidden') === false) {
+      updateCartState();
+      showToast('Produk dihapus dari keranjang');
+    }
+
+    function toggleItemSelection(productId, isChecked) {
+      const item = cart.find(i => i.id === productId);
+      if (item) item.selected = isChecked;
+      localStorage.setItem('falstore_cart', JSON.stringify(cart));
+      updateCartState();
+    }
+
+    function toggleSelectAllItems(sourceCheckbox) {
+      const isChecked = sourceCheckbox.checked;
+      cart.forEach(item => item.selected = isChecked);
+      localStorage.setItem('falstore_cart', JSON.stringify(cart));
+      updateCartState();
+    }
+
+    function clearCartItems() {
+      if (confirm('Yakin ingin mengosongkan seluruh isi keranjang?')) {
+        cart = [];
+        localStorage.removeItem('falstore_cart');
+        updateCartState();
+      }
+    }
+
+    function updateCartState() {
+      const totalCount = cart.reduce((acc, i) => acc + i.qty, 0);
+      document.getElementById('cart-badge').textContent = totalCount;
+
+      renderCartPage();
+
+      if (!document.getElementById('view-checkout').classList.contains('hidden')) {
         renderShopeeCheckoutItems();
       }
     }
 
-    function updateCartUI() {
-      const count = cart.reduce((acc, i) => acc + i.qty, 0);
-      document.getElementById('cart-badge').textContent = count;
-
-      const container = document.getElementById('cart-items-container');
-      container.innerHTML = '';
+    function renderCartPage() {
+      const emptyView = document.getElementById('cart-empty-view');
+      const filledView = document.getElementById('cart-filled-view');
+      const itemsContainer = document.getElementById('cart-page-items-list');
 
       if (cart.length === 0) {
-        container.innerHTML = `
-          <div class="py-20 text-center text-zinc-600 space-y-3">
-            <i data-lucide="shopping-cart" class="w-8 h-8 mx-auto text-zinc-700"></i>
-            <p class="text-xs uppercase tracking-[0.18em]">Keranjang belanja masih kosong.</p>
-          </div>
-        `;
-        document.getElementById('btn-checkout').disabled = true;
-        document.getElementById('btn-checkout').classList.add('opacity-40', 'cursor-not-allowed');
-      } else {
-        document.getElementById('btn-checkout').disabled = false;
-        document.getElementById('btn-checkout').classList.remove('opacity-40', 'cursor-not-allowed');
-
-        cart.forEach(item => {
-          const div = document.createElement('div');
-          div.className = 'flex gap-3.5 p-3 bg-obsidian border hairline items-center';
-          div.innerHTML = `
-            <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}" class="w-14 h-16 object-cover bg-zinc-900 shrink-0 border hairline">
-            <div class="flex-1 min-w-0">
-              <h4 class="text-xs font-semibold truncate text-white">${escapeHTML(item.name)}</h4>
-              <p class="text-xs font-mono text-zinc-400 mt-1">${formatRupiah(item.price)}</p>
-              <div class="flex items-center gap-3 mt-2">
-                <div class="inline-flex border hairline items-center bg-ink">
-                  <button type="button" onclick="updateQty('${escapeHTML(item.id)}', -1)" class="w-6 h-6 flex items-center justify-center hover:bg-zinc-800 text-xs">-</button>
-                  <span class="w-6 text-center text-xs font-mono">${item.qty}</span>
-                  <button type="button" onclick="updateQty('${escapeHTML(item.id)}', 1)" class="w-6 h-6 flex items-center justify-center hover:bg-zinc-800 text-xs">+</button>
-                </div>
-                <button type="button" onclick="removeFromCart('${escapeHTML(item.id)}')" class="text-[10px] text-zinc-500 hover:text-rose-400 uppercase tracking-wider">Hapus</button>
-              </div>
-            </div>
-          `;
-          container.appendChild(div);
-        });
+        emptyView.classList.remove('hidden');
+        filledView.classList.add('hidden');
+        return;
       }
 
-      const subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
-      document.getElementById('cart-total').textContent = formatRupiah(subtotal);
+      emptyView.classList.add('hidden');
+      filledView.classList.remove('hidden');
+      itemsContainer.innerHTML = '';
+
+      let totalSelectedPrice = 0;
+      let totalSelectedQty = 0;
+      let allSelected = true;
+
+      cart.forEach(item => {
+        const isSelected = item.selected !== false;
+        if (isSelected) {
+          totalSelectedPrice += (item.price * item.qty);
+          totalSelectedQty += item.qty;
+        } else {
+          allSelected = false;
+        }
+
+        const row = document.createElement('div');
+        row.className = 'p-4 sm:p-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-center hover:bg-zinc-900/30 transition-colors';
+        row.innerHTML = `
+          <!-- Product & Checkbox (6 cols) -->
+          <div class="col-span-1 md:col-span-6 flex items-center gap-3 sm:gap-4 min-w-0">
+            <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleItemSelection('${escapeHTML(item.id)}', this.checked)" class="w-4 h-4 rounded border-zinc-700 bg-obsidian text-white cursor-pointer shrink-0">
+            <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}" class="w-16 h-20 sm:w-20 sm:h-24 object-cover bg-zinc-900 shrink-0 border hairline">
+            <div class="min-w-0 space-y-1">
+              <h3 class="text-xs sm:text-sm font-bold text-white truncate cursor-pointer hover:underline" onclick="openProductDetail('${escapeHTML(item.id)}')">${escapeHTML(item.name)}</h3>
+              <div class="inline-block bg-obsidian px-2 py-0.5 border hairline text-[10px] text-zinc-400 font-mono">
+                Variasi: All Size / Hitam
+              </div>
+              <div class="md:hidden pt-1 flex items-center justify-between">
+                <span class="text-xs font-mono font-bold text-white">${formatRupiah(item.price)}</span>
+                <button type="button" onclick="removeFromCart('${escapeHTML(item.id)}')" class="text-[10px] text-zinc-500 hover:text-rose-400 underline">Hapus</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unit Price (2 cols) -->
+          <div class="hidden md:block md:col-span-2 text-center text-xs font-mono font-semibold text-zinc-300">
+            ${formatRupiah(item.price)}
+          </div>
+
+          <!-- Quantity Selector (2 cols) -->
+          <div class="col-span-1 md:col-span-2 flex md:justify-center items-center gap-2">
+            <div class="inline-flex border hairline items-center bg-obsidian">
+              <button type="button" onclick="updateQty('${escapeHTML(item.id)}', -1)" class="w-7 h-7 flex items-center justify-center hover:bg-zinc-800 text-xs">-</button>
+              <span class="w-8 text-center text-xs font-mono font-bold text-white">${item.qty}</span>
+              <button type="button" onclick="updateQty('${escapeHTML(item.id)}', 1)" class="w-7 h-7 flex items-center justify-center hover:bg-zinc-800 text-xs">+</button>
+            </div>
+          </div>
+
+          <!-- Total Price & Action (2 cols) -->
+          <div class="hidden md:flex md:col-span-2 flex-col items-end gap-1">
+            <span class="text-xs font-bold font-mono text-white">${formatRupiah(item.price * item.qty)}</span>
+            <button type="button" onclick="removeFromCart('${escapeHTML(item.id)}')" class="text-[10px] text-zinc-500 hover:text-rose-400 underline uppercase tracking-wider">Hapus</button>
+          </div>
+        `;
+        itemsContainer.appendChild(row);
+      });
+
+      document.getElementById('chk-select-all').checked = allSelected && cart.length > 0;
+      document.getElementById('chk-select-all-bottom').checked = allSelected && cart.length > 0;
+      document.getElementById('cart-selected-count').textContent = totalSelectedQty;
+      document.getElementById('cart-total-qty').textContent = totalSelectedQty;
+      document.getElementById('cart-page-total').textContent = formatRupiah(totalSelectedPrice);
+
+      const chkBtn = document.getElementById('btn-cart-checkout');
+      if (totalSelectedQty === 0) {
+        chkBtn.disabled = true;
+        chkBtn.classList.add('opacity-40', 'cursor-not-allowed');
+      } else {
+        chkBtn.disabled = false;
+        chkBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+      }
 
       lucide.createIcons();
     }
 
-    function toggleCartDrawer(show) {
-      const drawer = document.getElementById('cart-drawer');
-      if (show) drawer.classList.remove('hidden');
-      else drawer.classList.add('hidden');
-    }
-
-    // Shopee-Style Checkout
+    // Shopee-Style Checkout View
     function proceedToShopeeCheckout() {
-      if (cart.length === 0) return;
-      toggleCartDrawer(false);
+      const selectedItems = cart.filter(i => i.selected !== false);
+      if (selectedItems.length === 0) {
+        alert('Pilih minimal satu produk untuk di-checkout.');
+        return;
+      }
       switchView('checkout');
     }
 
@@ -1144,13 +1278,15 @@
       const container = document.getElementById('chk-items-table');
       container.innerHTML = '';
 
-      if (cart.length === 0) {
-        container.innerHTML = `<div class="p-8 text-center text-zinc-500 text-xs">Keranjang belanja kosong.</div>`;
+      const checkoutItems = cart.filter(i => i.selected !== false);
+
+      if (checkoutItems.length === 0) {
+        container.innerHTML = `<div class="p-8 text-center text-zinc-500 text-xs">Tidak ada produk yang dipilih untuk checkout.</div>`;
         calcCheckoutSummary();
         return;
       }
 
-      cart.forEach(item => {
+      checkoutItems.forEach(item => {
         const row = document.createElement('div');
         row.className = 'py-3.5 flex items-center justify-between gap-4';
         row.innerHTML = `
@@ -1172,7 +1308,8 @@
     }
 
     function calcCheckoutSummary() {
-      const subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+      const checkoutItems = cart.filter(i => i.selected !== false);
+      const subtotal = checkoutItems.reduce((acc, i) => acc + (i.price * i.qty), 0);
       const discount = subtotal * discountPercent;
       const courier = document.querySelector('input[name="chk-courier"]:checked')?.value || 'jne';
       const shippingFees = { jne: 15000, sicepat: 16000, gosend: 25000 };
@@ -1207,7 +1344,8 @@
     }
 
     async function submitShopeeCheckout() {
-      if (cart.length === 0) return alert('Keranjang belanja Anda masih kosong!');
+      const checkoutItems = cart.filter(i => i.selected !== false);
+      if (checkoutItems.length === 0) return alert('Keranjang belanja Anda masih kosong!');
 
       const name = document.getElementById('chk-name').value.trim();
       const phone = document.getElementById('chk-phone').value.trim();
@@ -1228,7 +1366,7 @@
             customer_address: address,
             courier,
             payment_method: payment,
-            items: cart,
+            items: checkoutItems,
             discount_code: voucher
           })
         });
@@ -1239,9 +1377,9 @@
           document.getElementById('inv-total').textContent = formatRupiah(data.order.total_amount);
           document.getElementById('invoice-modal').classList.remove('hidden');
 
-          cart = [];
-          localStorage.removeItem('falstore_cart');
-          updateCartUI();
+          cart = cart.filter(i => i.selected === false);
+          localStorage.setItem('falstore_cart', JSON.stringify(cart));
+          updateCartState();
           switchView('store');
         } else {
           alert('Gagal membuat pesanan: ' + (data.error || 'Terjadi kesalahan'));
@@ -1255,13 +1393,17 @@
       document.getElementById('invoice-modal').classList.add('hidden');
     }
 
-    // View Switcher
+    // View Switcher (Store / Cart / Checkout / Admin)
     function switchView(view) {
       document.getElementById('view-store').classList.add('hidden');
+      document.getElementById('view-cart').classList.add('hidden');
       document.getElementById('view-checkout').classList.add('hidden');
       document.getElementById('view-admin').classList.add('hidden');
 
-      if (view === 'checkout') {
+      if (view === 'cart') {
+        document.getElementById('view-cart').classList.remove('hidden');
+        renderCartPage();
+      } else if (view === 'checkout') {
         document.getElementById('view-checkout').classList.remove('hidden');
         renderShopeeCheckoutItems();
       } else if (view === 'admin') {
@@ -1416,7 +1558,7 @@
 
     document.addEventListener('keydown', event => {
       if (event.key !== 'Escape') return;
-      ['cart-drawer', 'modal-product-detail', 'modal-promo', 'track-modal', 'add-product-modal', 'invoice-modal'].forEach(id => {
+      ['modal-product-detail', 'modal-promo', 'track-modal', 'add-product-modal', 'invoice-modal'].forEach(id => {
         const el = document.getElementById(id);
         if (el && !el.classList.contains('hidden')) el.classList.add('hidden');
       });
@@ -1425,9 +1567,9 @@
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
       fetchProducts();
-      updateCartUI();
+      updateCartState();
 
-      // Automatically show elegant Promo Popup once after 2.5s if not seen in session
+      // Automatically show Promo Popup once after 2.5s if not seen in session
       setTimeout(() => {
         if (!sessionStorage.getItem('falstore_promo_seen')) {
           openPromoModal();
